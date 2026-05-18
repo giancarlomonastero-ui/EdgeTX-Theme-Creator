@@ -484,7 +484,7 @@ const Preview: React.FC<PreviewProps> = ({
 
   const renderScreenshot2 = () => {
     const MixerRow = ({ channel, name, active = false }: { channel: string; name: string; active?: boolean }) => (
-      <div className="flex items-center gap-3 rounded-2xl overflow-hidden border shadow-sm" style={{ backgroundColor: theme.secondary3, borderColor: active ? theme.warning : theme.secondary2 }}>
+      <div className="flex items-center gap-3 rounded-2xl overflow-hidden border shadow-sm" style={{ backgroundColor: theme.secondary3, borderColor: active ? theme.focus : theme.secondary2, borderWidth: active ? '3px' : '1px' }}>
         <div className="min-w-[55px] px-3 py-2 rounded-l-2xl font-bold uppercase text-[12px]" style={{ color: theme.primary1 }}>{channel}</div>
         <div className="flex-1 flex items-center justify-between gap-4 px-4 py-3 rounded-r-2xl" style={{ backgroundColor: theme.active, color: theme.primary1 }}>
           <div className="font-black text-sm">100%</div>
@@ -502,6 +502,8 @@ const Preview: React.FC<PreviewProps> = ({
           <MixerRow channel="CH2" name="Ele" />
           <MixerRow channel="CH3" name="Thr" />
           <MixerRow channel="CH4" name="Rud" />
+          <MixerRow channel="CH5" name="MOD" />
+          <MixerRow channel="CH6" name="FLP" />
         </div>
       </div>
     );
