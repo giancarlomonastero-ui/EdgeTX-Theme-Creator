@@ -233,6 +233,23 @@ const Preview: React.FC<PreviewProps> = ({
     </svg>
   );
 
+  const MaskIcon = ({ src, style, className }: { src: string; style?: React.CSSProperties; className?: string }) => (
+    <div 
+      className={className}
+      style={{ 
+        maskImage: `url(${src})`,
+        WebkitMaskImage: `url(${src})`,
+        maskSize: 'contain',
+        WebkitMaskSize: 'contain',
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        backgroundColor: 'currentColor',
+        display: 'inline-block',
+        ...style
+      }}
+    />
+  );
+
   const TopBarSvgIcon = ({ children, active = false }: { children: React.ReactNode; active?: boolean }) => (
     <div
       className="w-12 h-12 flex items-center justify-center rounded-xl transition-all"
@@ -314,8 +331,8 @@ const Preview: React.FC<PreviewProps> = ({
           <div className="flex items-end gap-3 mr-4 h-full pb-3">
             {activeScreen === 'screenshot1' && (
               <div className="flex flex-col items-center justify-center gap-1 mb-[2.5px]">
-                <img src="/images/mask_widget_volume4.svg" alt="volume" className="h-[12px] w-auto" style={{ filter: 'brightness(0) invert(1)' }} />
-                <img src="/images/mask_widget_txbat.svg" alt="battery" className="h-[12px] w-auto" style={{ filter: 'brightness(0) invert(1)' }} />
+                <MaskIcon src="/images/mask_widget_volume4.svg" className="text-white" style={{ height: '12px', width: '22.5px' }} />
+                <img src="/images/mask_widget_txbat_full.svg" alt="battery" style={{ height: '12px', width: 'auto' }} />
               </div>
             )}
             <div className="flex flex-col items-end leading-[0.9] font-bold text-white ml-1 pointer-events-none">
