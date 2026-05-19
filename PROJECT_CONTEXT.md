@@ -47,10 +47,16 @@ EdgeTX Theme Designer è uno strumento professionale per la creazione di temi a 
 - `MappingGuide.tsx`: Guida tecnica per la corrispondenza tra variabili e aree dello schermo.
 - `HistoryLog.tsx`: Visualizzazione della cronologia delle modifiche.
 
+### /public/images (Asset originali EdgeTX)
+- **Mask Icons**: Icone in formato SVG (`mask_icon_*.svg`) utilizzate con `mask-image` CSS per applicare dinamicamente i colori del tema.
+- **UI Elements**: Elementi grafici come widget, pulsanti e sfondi di sistema (`mask_ui_*.svg`, `mask_widget_*.svg`).
+- **Bitmaps**: Asset grafici ed icone a colori (`bmp_*.svg`).
+
 ---
 
 ## Funzioni principali
 - **Live Color Inspection**: Cliccando sugli elementi della preview, il designer identifica e seleziona automaticamente la variabile colore corrispondente.
+- **Asset Dynamic Rendering**: Gli asset in `public/images` vengono renderizzati dinamicamente utilizzando maschere CSS, permettendo la colorazione in tempo reale basata sulle variabili del tema.
 - **Multi-Screen Support**: Anteprima del tema su diverse schermate (Home, Mixer, Tastiera/Mixer Setup).
 - **Export Evoluto**: Generazione di un pacchetto ZIP contenente `theme.yml`, sfondi ridimensionati e screenshot di anteprima necessari per EdgeTX.
 - **Session Persistence**: Salvataggio automatico dello stato del progetto nel LocalStorage del browser.

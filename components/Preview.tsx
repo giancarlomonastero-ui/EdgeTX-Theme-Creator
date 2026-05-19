@@ -311,7 +311,13 @@ const Preview: React.FC<PreviewProps> = ({
 
           <div className="flex-grow"></div>
 
-          <div className="flex items-end gap-5 mr-4 h-full pb-3">
+          <div className="flex items-end gap-3 mr-4 h-full pb-3">
+            {activeScreen === 'screenshot1' && (
+              <div className="flex flex-col items-center justify-center gap-1 mb-[2.5px]">
+                <img src="/images/mask_widget_volume4.svg" alt="volume" className="h-[12px] w-auto" style={{ filter: 'brightness(0) invert(1)' }} />
+                <img src="/images/mask_widget_txbat.svg" alt="battery" className="h-[12px] w-auto" style={{ filter: 'brightness(0) invert(1)' }} />
+              </div>
+            )}
             <div className="flex flex-col items-end leading-[0.9] font-bold text-white ml-1 pointer-events-none">
               <span className="text-[11px] tracking-tight mb-[1px] uppercase">{formatDate(now)}</span>
               <span className="text-[18px] font-black tracking-tight">{formatTime(now)}</span>

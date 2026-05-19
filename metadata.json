@@ -1,5 +1,6 @@
 {
-  "name": "EdgeTX Theme Designer 1.0",
-  "description": "Version 1.0: Color theme designer for EdgeTX. Includes optimized responsive layout, integrated color inspection, asset management (background and model), and full package export for TX16S MK3 and standard.",
-  "requestFramePermissions": []
+  "name": "",
+  "description": "",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
 }
