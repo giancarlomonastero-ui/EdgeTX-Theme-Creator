@@ -20,7 +20,7 @@ interface SplashEditorProps {
 const FONTS_LIST = [
   'Arial',
   'Times New Roman',
-  'Impact'
+  'Anton'
 ];
 
 export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, onClose, onExport }) => {
@@ -216,6 +216,11 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
         ctx.font = `${isItalic ? 'italic ' : ''}bold ${textSize}px "${textFont}", sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+
+        // Apply custom letter spacing for Anton font to improve readability
+        if ('letterSpacing' in ctx) {
+          (ctx as any).letterSpacing = textFont === 'Anton' ? '0.03em' : '0px';
+        }
 
         // Apply Shadow to text safely
         if (enableShadow) {
