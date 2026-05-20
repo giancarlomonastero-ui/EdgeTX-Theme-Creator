@@ -266,8 +266,20 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
   ]);
 
   const handleExport = (resolution: '800x480' | '480x272') => {
-    if (item && onExport) {
-      onExport(item, resolution);
+    const canvas = canvasRef.current;
+    if (item && onExport && canvas) {
+      try {
+        const canvasDataUrl = canvas.toDataURL('image/png');
+        const customItem: GalleryItem = {
+          ...item,
+          downloadUrl: canvasDataUrl,
+          imageUrl: canvasDataUrl
+        };
+        onExport(customItem, resolution);
+      } catch (err) {
+        console.error("Failed to generate data URL from canvas:", err);
+        onExport(item, resolution);
+      }
     }
     onClose();
   };
