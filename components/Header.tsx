@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang, currentPage, setCurrentP
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">EdgeTX <span className="text-blue-500">Theme Designer</span> <span className="text-slate-500 text-sm font-medium">v.1.5</span></h1>
+            <h1 className="text-2xl font-bold tracking-tight text-white">EdgeTX <span className="text-blue-500">Theme Designer</span> <span className="text-slate-500 text-sm font-medium">v.1.8</span></h1>
             <p className="text-slate-400 text-sm">{t[lang].subtitle}</p>
           </div>
         </div>

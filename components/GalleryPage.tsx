@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { GALLERY_CONFIG } from '../gallery.config.ts';
+import { SplashEditor } from './SplashEditor';
 
 type Lang = 'it' | 'en';
 
@@ -27,6 +28,20 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ lang, onApplyBackground }) =>
   const [splashLoading, setSplashLoading] = useState(true);
   const [splashError, setSplashError] = useState<string | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+
+  // Splash Screen Editor States
+  const [selectedSplashItem, setSelectedSplashItem] = useState<GalleryItem | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+
+  const handleOpenEditor = (item: GalleryItem) => {
+    setSelectedSplashItem(item);
+    setIsEditorOpen(true);
+  };
+
+  const handleCloseEditor = () => {
+    setSelectedSplashItem(null);
+    setIsEditorOpen(false);
+  };
 
   const t = useMemo(() => ({
     it: {
@@ -177,7 +192,11 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ lang, onApplyBackground }) =>
     const actionId = `${item.id}-${resolution}`;
     try {
       setDownloadingId(actionId);
-      const res = await fetch(item.downloadUrl, { mode: 'cors' });
+      const res = await fetch(item.downloadUrl, { 
+        mode: 'cors',
+        referrerPolicy: 'no-referrer',
+        credentials: 'omit'
+      });
       if (!res.ok) throw new Error('Image fetch error');
       const blob = await res.blob();
       const objectUrl = URL.createObjectURL(blob);
@@ -185,6 +204,7 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ lang, onApplyBackground }) =>
       if (resolution === '480x272') {
         const img = new Image();
         img.crossOrigin = 'anonymous';
+        img.referrerPolicy = 'no-referrer';
         img.src = objectUrl;
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
@@ -231,7 +251,11 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ lang, onApplyBackground }) =>
   const handleApplyBackground = async (item: GalleryItem) => {
     try {
       setApplyingId(item.id);
-      const res = await fetch(item.downloadUrl, { mode: 'cors' });
+      const res = await fetch(item.downloadUrl, { 
+        mode: 'cors',
+        referrerPolicy: 'no-referrer',
+        credentials: 'omit'
+      });
       if (!res.ok) throw new Error('Image fetch error');
       const blob = await res.blob();
 
@@ -367,11 +391,14 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ lang, onApplyBackground }) =>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {splashItems.map((item) => (
               <div key={item.id} className="bg-slate-950 border border-slate-800 rounded-lg overflow-hidden flex flex-col justify-between">
-                <div className="aspect-[5/3] bg-slate-950 w-full relative">
+                <div 
+                  className="aspect-[5/3] bg-slate-950 w-full relative cursor-pointer group overflow-hidden"
+                  onClick={() => handleOpenEditor(item)}
+                >
                   <img
                     src={item.previewUrl}
                     alt={item.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-350"
                     loading="lazy"
                     onError={(e) => {
                       const img = e.currentTarget;
@@ -380,8 +407,19 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ lang, onApplyBackground }) =>
                       }
                     }}
                   />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                    <span className="bg-amber-500 text-slate-950 text-xs font-black px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5 transform scale-90 group-hover:scale-100 transition-transform duration-200">
+                      ✏️ {lang === 'it' ? 'EDITA SPLASH' : 'EDIT SPLASH'}
+                    </span>
+                  </div>
                 </div>
                 <div className="p-4 flex-grow flex flex-col justify-between">
+                  <button
+                    onClick={() => handleOpenEditor(item)}
+                    className="w-full bg-slate-800 hover:bg-slate-700 hover:text-amber-500 border border-slate-700/50 text-slate-200 text-[10px] font-black uppercase tracking-widest py-2 px-3 rounded-lg transition-all cursor-pointer text-center mb-3 flex items-center justify-center gap-1"
+                  >
+                    ✏️ {lang === 'it' ? 'PERSONALIZZA / EDITA' : 'CUSTOMIZE / EDIT'}
+                  </button>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={() => handleDownloadSplash(item, '800x480')}
@@ -404,6 +442,14 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ lang, onApplyBackground }) =>
           </div>
         )}
       </div>
+
+      <SplashEditor 
+        isOpen={isEditorOpen} 
+        item={selectedSplashItem} 
+        lang={lang} 
+        onClose={handleCloseEditor} 
+        onExport={handleDownloadSplash}
+      />
     </main>
   );
 };
