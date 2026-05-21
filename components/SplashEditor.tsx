@@ -54,7 +54,7 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
   const t = {
     it: {
       editTitle: 'Editor Splash Screen',
-      instructions: 'Editor avanzato per la creazione della schermata di avvio della radio. Puoi personalizzare testo, font, colori ed effetti. L’immagine verrà esportata automaticamente nelle risoluzioni compatibili con il tuo dispositivo.',
+      instructions: 'Questo editor ti permette di personalizzare la schermata di avvio della tua radio (Splash Screen). Puoi aggiungere solo un testo personalizzato, come il tuo nome o un identificativo, per rendere la tua radio facilmente riconoscibile. Non è possibile inserire loghi o firme grafiche: è consentito esclusivamente testo. Questo può essere utile in caso di smarrimento della radio o per identificarne rapidamente il proprietario. Lo scopo è aggiungere un elemento semplice di identificazione personale al tuo dispositivo.',
       textSettings: 'Impostazioni Testo',
       textPlaceholder: 'Inserisci il testo...',
       fontSize: 'Dimensione Testo',
@@ -79,7 +79,7 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
     },
     en: {
       editTitle: 'Splash Screen Editor',
-      instructions: 'Advanced editor for creating the radio boot splash screen. You can customize text, fonts, colors and effects. The image will be automatically exported in resolutions compatible with your device.',
+      instructions: 'This editor allows you to customize the startup screen of your radio (Splash Screen). You can only add custom text, such as your name or an identifier, to make your radio easily recognizable. Logos or graphic signatures are not supported: only text input is allowed. This can be useful in case the radio is lost or to quickly identify its owner. The goal is to add a simple personal identification element to your device.',
       textSettings: 'Text Settings',
       textPlaceholder: 'Enter text here...',
       fontSize: 'Text Size',
@@ -294,23 +294,23 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
       <div 
-        className="bg-slate-900 border border-slate-800 text-white rounded-2xl shadow-2xl max-w-6xl w-full flex flex-col md:flex-row overflow-hidden"
+        className="bg-slate-900 border border-slate-800 text-white rounded-2xl shadow-2xl max-w-7xl w-full flex flex-col md:flex-row overflow-hidden md:h-[85vh] md:max-h-[700px]"
         style={{ minHeight: '520px' }}
       >
         {/* AREA PREVIEW (SINISTRA) */}
-        <div className="flex-1 bg-slate-950 p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800">
+        <div className="flex-1 bg-slate-950 p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800 md:h-full md:overflow-hidden">
           <div>
             <span className="text-xs uppercase tracking-widest font-black text-amber-500 mb-2 block">{localized.editTitle}</span>
             <h3 className="text-xl font-bold text-slate-100 flex items-center gap-2">
               <span className="inline-block w-2.5 h-4 bg-amber-500 rounded-sm"></span>
               PREVIEW (800x480)
             </h3>
-            <p className="text-slate-400 text-xs mt-2 leading-relaxed font-normal">
+            <p className="text-slate-400 text-xs mt-2 leading-relaxed font-normal whitespace-pre-line">
               {localized.instructions}
             </p>
           </div>
 
-          <div className="my-6 relative border border-slate-800 rounded-xl overflow-hidden bg-slate-950 aspect-[5/3] w-full max-w-[800px] mx-auto shadow-inner flex items-center justify-center">
+          <div className="my-4 relative border border-slate-800 rounded-xl overflow-hidden bg-slate-950 aspect-[5/3] w-full max-w-[800px] max-h-[340px] lg:max-h-[420px] mx-auto shadow-inner flex items-center justify-center shrink-0">
             {!imageLoaded && !loadingError && (
               <div className="absolute inset-0 flex items-center justify-center bg-slate-900/40 text-slate-400 text-sm">
                 <span className="animate-spin mr-2 border-2 border-amber-500 border-t-transparent rounded-full w-4 h-4"></span>
@@ -327,7 +327,7 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
               ref={canvasRef}
               width={800}
               height={480}
-              className="w-full h-full object-contain"
+              className="max-w-full max-h-full object-contain"
               style={{ display: imageLoaded ? 'block' : 'none' }}
             />
           </div>
@@ -340,11 +340,12 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
         </div>
 
         {/* AREA EDITOR (DESTRA) */}
-        <div className="w-full md:w-[420px] p-6 bg-slate-900 flex flex-col justify-between max-h-[90vh] md:max-h-[640px] overflow-y-auto custom-scrollbar">
-          <div className="space-y-6">
+        <div className="w-full md:w-[380px] bg-slate-900 flex flex-col justify-between md:h-full shrink-0 overflow-hidden">
+          {/* SEZIONE INPUTS SCROLLABILE */}
+          <div className="flex-1 overflow-y-auto p-5 space-y-3.5 custom-scrollbar">
             {/* Input Testo */}
             <div>
-              <label className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-2">
+              <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
                 {localized.textSettings}
               </label>
               <input
@@ -352,20 +353,20 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
                 value={overlayText}
                 onChange={(e) => setOverlayText(e.target.value)}
                 placeholder={localized.textPlaceholder}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
 
             {/* Font Selection & Size */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-2">
+                <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
                   {localized.fontFamily}
                 </label>
                 <select
                   value={textFont}
                   onChange={(e) => setTextFont(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer"
                 >
                   {FONTS_LIST.map((f) => (
                     <option key={f} value={f}>{f}</option>
@@ -373,7 +374,7 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-2">
+                <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
                   {localized.fontSize} ({textSize}px)
                 </label>
                 <input
@@ -382,118 +383,51 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
                   max="100"
                   value={textSize}
                   onChange={(e) => setTextSize(Number(e.target.value))}
-                  className="w-full accent-amber-500 h-1.5 bg-slate-950 rounded-lg cursor-pointer mt-3"
+                  className="w-full accent-amber-500 h-1 bg-slate-950 rounded-lg cursor-pointer mt-2"
                 />
               </div>
             </div>
 
-            {/* Italic Checkbox Option */}
-            <div className="flex items-center gap-2.5 bg-slate-950/40 p-3 border border-slate-800/60 rounded-xl">
-              <input
-                id="italic-toggle"
-                type="checkbox"
-                checked={isItalic}
-                onChange={(e) => setIsItalic(e.target.checked)}
-                className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
-              />
-              <label htmlFor="italic-toggle" className="text-xs font-bold text-slate-200 cursor-pointer select-none">
-                {localized.italicLabel}
+            {/* Toggles Row (Italic, Shadow, Outline in a single compact 3-column row) */}
+            <div className="grid grid-cols-3 gap-1.5 pt-0.5">
+              <label className="flex items-center gap-1.5 bg-slate-950 border border-slate-800/80 rounded-lg p-1.5 cursor-pointer justify-center select-none">
+                <input
+                  type="checkbox"
+                  checked={isItalic}
+                  onChange={(e) => setIsItalic(e.target.checked)}
+                  className="w-3.5 h-3.5 accent-amber-500 rounded cursor-pointer shrink-0"
+                />
+                <span className="text-[10px] font-black text-slate-200 truncate">{localized.italicLabel}</span>
+              </label>
+
+              <label className="flex items-center gap-1.5 bg-slate-950 border border-slate-800/80 rounded-lg p-1.5 cursor-pointer justify-center select-none">
+                <input
+                  type="checkbox"
+                  checked={enableShadow}
+                  onChange={(e) => setEnableShadow(e.target.checked)}
+                  className="w-3.5 h-3.5 accent-amber-500 rounded cursor-pointer shrink-0"
+                />
+                <span className="text-[10px] font-black text-slate-200 truncate">Shadow</span>
+              </label>
+
+              <label className="flex items-center gap-1.5 bg-slate-950 border border-slate-800/80 rounded-lg p-1.5 cursor-pointer justify-center select-none">
+                <input
+                  type="checkbox"
+                  checked={enableOutline}
+                  onChange={(e) => setEnableOutline(e.target.checked)}
+                  className="w-3.5 h-3.5 accent-amber-500 rounded cursor-pointer shrink-0"
+                />
+                <span className="text-[10px] font-black text-slate-200 truncate">Outline</span>
               </label>
             </div>
 
-            {/* Posizionamento Testo X e Y Slider */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-2">
-                  X ({textX}px)
-                </label>
-                <input
-                  type="range"
-                  min="0"
-                  max="800"
-                  value={textX}
-                  onChange={(e) => setTextX(Number(e.target.value))}
-                  className="w-full accent-amber-500 h-1.5 bg-slate-950 rounded-lg cursor-pointer mt-3"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-2">
-                  Y ({textY}px)
-                </label>
-                <input
-                  type="range"
-                  min="0"
-                  max="480"
-                  value={textY}
-                  onChange={(e) => setTextY(Number(e.target.value))}
-                  className="w-full accent-amber-500 h-1.5 bg-slate-950 rounded-lg cursor-pointer mt-3"
-                />
-              </div>
-            </div>
-
-            {/* Sistema Colori (3 color pickers indipendenti) */}
-            <div className="border-t border-slate-800 pt-4">
-              <span className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-3">
-                {localized.colorsSection}
-              </span>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="flex flex-col items-center bg-slate-950 border border-slate-800/60 rounded-lg p-2">
-                  <span className="text-[10px] text-slate-400 text-center uppercase font-bold truncate w-full mb-1">
-                    Fill
-                  </span>
-                  <input
-                    type="color"
-                    value={textColor}
-                    onChange={(e) => setTextColor(e.target.value)}
-                    className="w-8 h-8 rounded-md border-0 bg-transparent cursor-pointer"
-                  />
-                </div>
-                <div className="flex flex-col items-center bg-slate-950 border border-slate-800/60 rounded-lg p-2">
-                  <span className="text-[10px] text-slate-400 text-center uppercase font-bold truncate w-full mb-1">
-                    Shadow
-                  </span>
-                  <input
-                    type="color"
-                    value={shadowColor}
-                    onChange={(e) => setShadowColor(e.target.value)}
-                    className="w-8 h-8 rounded-md border-0 bg-transparent cursor-pointer"
-                  />
-                </div>
-                <div className="flex flex-col items-center bg-slate-950 border border-slate-800/60 rounded-lg p-2">
-                  <span className="text-[10px] text-slate-400 text-center uppercase font-bold truncate w-full mb-1">
-                    Outline
-                  </span>
-                  <input
-                    type="color"
-                    value={outlineColor}
-                    onChange={(e) => setOutlineColor(e.target.value)}
-                    className="w-8 h-8 rounded-md border-0 bg-transparent cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Specific Effects Controls */}
-            <div className="border-t border-slate-800 pt-4 space-y-4">
-              <span className="block text-xs font-black uppercase tracking-wider text-slate-400">
-                {localized.effectsSection}
-              </span>
-
-              {/* Toggle Shadow */}
-              <div className="bg-slate-950/50 border border-slate-800/60 rounded-lg p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-slate-300">{localized.shadowToggle}</span>
-                  <input
-                    type="checkbox"
-                    checked={enableShadow}
-                    onChange={(e) => setEnableShadow(e.target.checked)}
-                    className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
-                  />
-                </div>
-                {enableShadow && (
+            {/* Conditional Blur & Width Control Row */}
+            {(enableShadow || enableOutline) && (
+              <div className="grid grid-cols-2 gap-2 bg-slate-950/40 border border-slate-800/60 rounded-lg p-2">
+                {enableShadow ? (
                   <div>
-                    <span className="text-[10px] text-slate-500 uppercase font-black block mb-1">
-                      {localized.shadowBlurLabel} ({shadowBlur}px)
+                    <span className="text-[9px] text-slate-400 uppercase font-black block mb-1">
+                      Blur ({shadowBlur}px)
                     </span>
                     <input
                       type="range"
@@ -504,24 +438,11 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
                       className="w-full h-1 accent-amber-500 bg-slate-900 rounded cursor-pointer"
                     />
                   </div>
-                )}
-              </div>
-
-              {/* Toggle Outline */}
-              <div className="bg-slate-950/50 border border-slate-800/60 rounded-lg p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-slate-300">{localized.outlineToggle}</span>
-                  <input
-                    type="checkbox"
-                    checked={enableOutline}
-                    onChange={(e) => setEnableOutline(e.target.checked)}
-                    className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
-                  />
-                </div>
-                {enableOutline && (
+                ) : <div />}
+                {enableOutline ? (
                   <div>
-                    <span className="text-[10px] text-slate-500 uppercase font-black block mb-1">
-                      {localized.outlineWidthLabel} ({outlineWidth}px)
+                    <span className="text-[9px] text-slate-400 uppercase font-black block mb-1">
+                      Width ({outlineWidth}px)
                     </span>
                     <input
                       type="range"
@@ -529,35 +450,107 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
                       max="15"
                       value={outlineWidth}
                       onChange={(e) => setOutlineWidth(Number(e.target.value))}
-                      className="w-full h-1 accent-amber-500 bg-slate-950 rounded cursor-pointer"
+                      className="w-full h-1 accent-amber-500 bg-slate-900 rounded cursor-pointer"
                     />
                   </div>
-                )}
+                ) : <div />}
+              </div>
+            )}
+
+            {/* Posizionamento Testo X e Y Slider */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
+                  X ({textX}px)
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="800"
+                  value={textX}
+                  onChange={(e) => setTextX(Number(e.target.value))}
+                  className="w-full accent-amber-500 h-1 bg-slate-950 rounded-lg cursor-pointer mt-2"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
+                  Y ({textY}px)
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="480"
+                  value={textY}
+                  onChange={(e) => setTextY(Number(e.target.value))}
+                  className="w-full accent-amber-500 h-1 bg-slate-950 rounded-lg cursor-pointer mt-2"
+                />
+              </div>
+            </div>
+
+            {/* Sistema Colori (3 color pickers indipendenti) */}
+            <div className="border-t border-slate-800 pt-3">
+              <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-2">
+                {localized.colorsSection}
+              </span>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="flex flex-col items-center bg-slate-950 border border-slate-800/60 rounded-lg p-1">
+                  <span className="text-[9px] text-slate-400 text-center uppercase font-bold truncate w-full mb-0.5">
+                    Fill
+                  </span>
+                  <input
+                    type="color"
+                    value={textColor}
+                    onChange={(e) => setTextColor(e.target.value)}
+                    className="w-6 h-6 rounded border-0 bg-transparent cursor-pointer"
+                  />
+                </div>
+                <div className="flex flex-col items-center bg-slate-950 border border-slate-800/60 rounded-lg p-1">
+                  <span className="text-[9px] text-slate-400 text-center uppercase font-bold truncate w-full mb-0.5">
+                    Shadow
+                  </span>
+                  <input
+                    type="color"
+                    value={shadowColor}
+                    onChange={(e) => setShadowColor(e.target.value)}
+                    className="w-6 h-6 rounded border-0 bg-transparent cursor-pointer"
+                  />
+                </div>
+                <div className="flex flex-col items-center bg-slate-950 border border-slate-800/60 rounded-lg p-1">
+                  <span className="text-[9px] text-slate-400 text-center uppercase font-bold truncate w-full mb-0.5">
+                    Outline
+                  </span>
+                  <input
+                    type="color"
+                    value={outlineColor}
+                    onChange={(e) => setOutlineColor(e.target.value)}
+                    className="w-6 h-6 rounded border-0 bg-transparent cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="border-t border-slate-800 pt-6 mt-6 flex flex-col gap-3 shrink-0">
+          {/* FIANCO FISSO BOTTOM CON AZIONI DI ESPORTAZIONE */}
+          <div className="border-t border-slate-800 p-4 bg-slate-950/80 flex flex-col gap-2 shrink-0">
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => handleExport('800x480')}
                 disabled={!imageLoaded}
-                className="bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-xs font-black uppercase tracking-wider py-3 rounded-lg transition-all shadow-lg hover:shadow-amber-500/10 cursor-pointer text-center"
+                className="bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md hover:shadow-amber-500/10 cursor-pointer text-center"
               >
                 {localized.export800}
               </button>
               <button
                 onClick={() => handleExport('480x272')}
                 disabled={!imageLoaded}
-                className="bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-xs font-black uppercase tracking-wider py-3 rounded-lg transition-all shadow-lg hover:shadow-amber-500/10 cursor-pointer text-center"
+                className="bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md hover:shadow-amber-500/10 cursor-pointer text-center"
               >
                 {localized.export272}
               </button>
             </div>
             <button
               onClick={onClose}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors cursor-pointer text-center"
+              className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-colors cursor-pointer text-center"
             >
               {localized.cancelBtn}
             </button>
