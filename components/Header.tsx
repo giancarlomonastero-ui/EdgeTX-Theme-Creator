@@ -4,8 +4,8 @@ import React from 'react';
 interface HeaderProps {
   lang: 'it' | 'en';
   setLang: (lang: 'it' | 'en') => void;
-  currentPage: 'designer' | 'gallery';
-  setCurrentPage: (page: 'designer' | 'gallery') => void;
+  currentPage: 'designer' | 'gallery' | 'splash';
+  setCurrentPage: (page: 'designer' | 'gallery' | 'splash') => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ lang, setLang, currentPage, setCurrentPage }) => {
@@ -14,13 +14,15 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang, currentPage, setCurrentP
       subtitle: "Crea temi personalizzati per la tua radio con schermo a colori EdgeTX",
       siteBtn: "Sito Ufficiale EdgeTX",
       galleryBtn: "Gallery",
-      designerBtn: "Editor"
+      designerBtn: "Editor",
+      splashBtn: "Splash Screen"
     },
     en: {
       subtitle: "Create custom themes for your EdgeTX color screen radio",
       siteBtn: "Official EdgeTX Site",
       galleryBtn: "Gallery",
-      designerBtn: "Designer"
+      designerBtn: "Designer",
+      splashBtn: "Splash Screen"
     }
   };
 
@@ -83,16 +85,36 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang, currentPage, setCurrentP
             </button>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-2 md:gap-4 justify-center md:justify-start">
             <button
-              onClick={() => setCurrentPage(currentPage === 'gallery' ? 'designer' : 'gallery')}
-              className={`text-xs py-2 px-4 rounded-full border transition-colors ${
-                currentPage === 'gallery'
-                  ? 'bg-blue-600 border-blue-500 text-white'
+              onClick={() => setCurrentPage('designer')}
+              className={`text-xs py-2 px-4 rounded-full border transition-all ${
+                currentPage === 'designer'
+                  ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_12px_rgba(59,130,246,0.3)]'
                   : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
               }`}
             >
-              {currentPage === 'gallery' ? t[lang].designerBtn : t[lang].galleryBtn}
+              {t[lang].designerBtn}
+            </button>
+            <button
+              onClick={() => setCurrentPage('gallery')}
+              className={`text-xs py-2 px-4 rounded-full border transition-all ${
+                currentPage === 'gallery'
+                  ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_12px_rgba(59,130,246,0.3)]'
+                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+              }`}
+            >
+              {t[lang].galleryBtn}
+            </button>
+            <button
+              onClick={() => setCurrentPage('splash')}
+              className={`text-xs py-2 px-4 rounded-full border transition-all ${
+                currentPage === 'splash'
+                  ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_12px_rgba(59,130,246,0.3)]'
+                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+              }`}
+            >
+              {t[lang].splashBtn}
             </button>
             <a 
               href="https://edgetx.org/" 

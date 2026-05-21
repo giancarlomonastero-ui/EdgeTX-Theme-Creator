@@ -4,6 +4,7 @@ import { INITIAL_THEME, VARIABLE_METADATA } from './constants.ts';
 import Preview from './components/Preview.tsx';
 import Header from './components/Header.tsx';
 import GalleryPage from './components/GalleryPage.tsx';
+import SplashPage from './components/SplashPage.tsx';
 
 type ScreenID = 'screenshot1' | 'screenshot2' | 'screenshot3';
 
@@ -158,7 +159,7 @@ const App: React.FC = () => {
   const [isExporting, setIsExporting] = useState<false | 'standard' | 'tx16s'>(false);
   const [exportProgress, setExportProgress] = useState(0);
   const [exportStatus, setExportStatus] = useState("");
-  const [currentPage, setCurrentPage] = useState<'designer' | 'gallery'>('designer');
+  const [currentPage, setCurrentPage] = useState<'designer' | 'gallery' | 'splash'>('designer');
 
   const t = (key: Exclude<keyof typeof translations['it'], 'varDescriptions'>): string => translations[lang][key] as string;
 
@@ -463,6 +464,10 @@ colors:
             setBackgroundImg(dataUrl);
             setCurrentPage('designer');
           }}
+        />
+      ) : currentPage === 'splash' ? (
+        <SplashPage
+          lang={lang}
         />
       ) : (
       <main className="flex-grow container mx-auto px-4 py-8 flex flex-col xl:grid xl:grid-cols-12 gap-8 items-start">
