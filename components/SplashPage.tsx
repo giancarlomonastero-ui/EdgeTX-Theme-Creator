@@ -239,14 +239,11 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {splashItems.map((item) => (
               <div key={item.id} className="bg-slate-950 border border-slate-800 rounded-lg overflow-hidden flex flex-col justify-between">
-                <div 
-                  className="aspect-[5/3] bg-slate-950 w-full relative cursor-pointer group overflow-hidden"
-                  onClick={() => handleOpenEditor(item)}
-                >
+                <div className="aspect-[5/3] bg-slate-950 w-full relative overflow-hidden">
                   <img
                     src={item.previewUrl}
                     alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-350"
+                    className="w-full h-full object-cover"
                     loading="lazy"
                     onError={(e) => {
                       const img = e.currentTarget;
@@ -255,11 +252,6 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
                       }
                     }}
                   />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                    <span className="bg-amber-500 text-slate-950 text-xs font-black px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5 transform scale-90 group-hover:scale-100 transition-transform duration-200">
-                      ✏️ {activeLang === 'it' ? 'EDITA SPLASH' : 'EDIT SPLASH'}
-                    </span>
-                  </div>
                 </div>
                 <div className="p-4 flex-grow flex flex-col justify-between">
                   <button

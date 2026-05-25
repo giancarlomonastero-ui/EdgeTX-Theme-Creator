@@ -25,6 +25,17 @@ const FONTS_LIST = [
 
 export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, onClose, onExport }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const modalOverlayRef = useRef<HTMLDivElement | null>(null);
+
+  // Force scroll top when opening the editor
+  useEffect(() => {
+    if (isOpen) {
+      if (modalOverlayRef.current) {
+        modalOverlayRef.current.scrollTop = 0;
+      }
+      window.scrollTo(0, 0);
+    }
+  }, [isOpen]);
   
   // Editor States
   const [overlayText, setOverlayText] = useState('Booting EdgeTX...');
@@ -292,7 +303,10 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+    <div 
+      ref={modalOverlayRef}
+      className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto"
+    >
       <div 
         className="bg-slate-900 border border-slate-800 text-white rounded-2xl shadow-2xl max-w-7xl w-full flex flex-col md:flex-row overflow-hidden md:h-[85vh] md:max-h-[700px]"
         style={{ minHeight: '520px' }}
