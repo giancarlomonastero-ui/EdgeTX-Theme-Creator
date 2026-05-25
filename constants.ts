@@ -59,17 +59,17 @@ export const VARIABLE_METADATA: VariableMeta[] = [
 ];
 
 export const INITIAL_THEME: EdgeTXTheme = {
-  primary1: '#000000',
-  primary2: '#FFFFFF',
-  primary3: '#E00000',
-  secondary1: '#474747',
-  secondary2: '#8C8C8C',
-  secondary3: '#DBDBDB',
-  focus: '#93D400',
-  edit: '#8C8C8C',
-  active: '#FFC800',
-  warning: '#A30000',
-  disabled: '#000000'
+  primary1: '#FF9E00',
+  primary2: '#F0F0F0',
+  primary3: '#303030',
+  secondary1: '#000000',
+  secondary2: '#FFFFFF',
+  secondary3: '#808080',
+  focus: '#FF9E00',
+  edit: '#00A0FF',
+  active: '#00D000',
+  warning: '#FFD000',
+  disabled: '#606060'
 };
 
 export const PRESETS: Record<string, EdgeTXTheme> = {

@@ -19,9 +19,9 @@ const App: React.FC = () => {
       themeName: "Nome Tema",
       author: "Autore",
       info: "Info",
-      defaultThemeName: "Nome Template",
-      defaultAuthor: "Autore",
-      defaultInfo: "Info Template",
+      defaultThemeName: "Default",
+      defaultAuthor: "EdgeTX",
+      defaultInfo: "Default EdgeTX Theme",
       import: "Importa .yml",
       export: "Esporta Template",
       exportTx: "Esporta TX16S MK3",
@@ -70,9 +70,9 @@ const App: React.FC = () => {
       themeName: "Theme Name",
       author: "Author",
       info: "Info",
-      defaultThemeName: "Template Name",
-      defaultAuthor: "Author",
-      defaultInfo: "Template Info",
+      defaultThemeName: "Default",
+      defaultAuthor: "EdgeTX",
+      defaultInfo: "Default EdgeTX Theme",
       import: "Import .yml",
       export: "Export Template",
       exportTx: "Export TX16S MK3",
@@ -123,7 +123,7 @@ const App: React.FC = () => {
         const parsed = JSON.parse(saved);
         return {
           theme: parsed.theme || INITIAL_THEME,
-          meta: parsed.meta || { name: 'Template Name', author: 'Author', info: 'Template Info' },
+          meta: parsed.meta || { name: 'Default', author: 'EdgeTX', info: 'Default EdgeTX Theme' },
           droneImg: parsed.droneImg || "/assets/drone.png",
           backgroundImg: parsed.backgroundImg || null,
           modelLabel: parsed.modelLabel || 'MODEL',
@@ -135,7 +135,7 @@ const App: React.FC = () => {
     }
     return {
       theme: INITIAL_THEME,
-      meta: { name: 'Template Name', author: 'Author', info: 'Template Info' },
+      meta: { name: 'Default', author: 'EdgeTX', info: 'Default EdgeTX Theme' },
       droneImg: "/assets/drone.png",
       backgroundImg: null,
       modelLabel: 'MODEL',
@@ -237,27 +237,97 @@ const App: React.FC = () => {
 
   const to0x = (hex: string) => `0x${hex.replace('#', '').toUpperCase()}`;
   const from0x = (ox: string) => {
-    const hex = ox.replace('0x', '').replace('0X', '');
+    let clean = ox.replace(/['"]/g, '').trim();
+    if (clean.startsWith('#')) return clean;
+    const hex = clean.replace(/^0[xX]/, '');
     return `#${hex.padStart(6, '0')}`;
   };
 
   const yamlCode = useMemo(() => {
-    return `summary: 
-  name: ${meta.name}
-  author: ${meta.author}
-  info: ${meta.info}
+    const coreColors: Record<string, string> = {
+      PRIMARY1: theme.primary1,
+      PRIMARY2: theme.primary2,
+      PRIMARY3: theme.primary3,
+      SECONDARY1: theme.secondary1,
+      SECONDARY2: theme.secondary2,
+      SECONDARY3: theme.secondary3,
+      FOCUS: theme.focus,
+      EDIT: theme.edit,
+      ACTIVE: theme.active,
+      WARNING: theme.warning,
+      DISABLED: theme.disabled,
+    };
+
+    const extraColors: Record<string, string> = {
+      TEXT: theme.text || "#FFFFFF",
+      TEXT_INVERTED: theme.text_inverted || "#000000",
+      TEXT_STATUSBAR: theme.text_statusbar || "#FFFFFF",
+      HEADER: theme.header || "#202020",
+      FOOTER: theme.footer || "#202020",
+      MENU_TITLE: theme.menu_title || "#FFFFFF",
+      MENU_BACKGROUND: theme.menu_background || "#000000",
+      VIEW_BACKGROUND: theme.view_background || "#000000",
+      VIEW_TEXT: theme.view_text || "#FFFFFF",
+      CURVE_AXIS: theme.curve_axis || "#808080",
+      CURVE_LINE: theme.curve_line || theme.primary1,
+    };
+
+    // Keep any other extra custom keys imported dynamically
+    const existingKeys = new Set([...Object.keys(coreColors), ...Object.keys(extraColors)]);
+    Object.keys(theme).forEach(key => {
+      const upperKey = key.toUpperCase();
+      if (!existingKeys.has(upperKey) && !['PRIMARY1', 'PRIMARY2', 'PRIMARY3', 'SECONDARY1', 'SECONDARY2', 'SECONDARY3', 'FOCUS', 'EDIT', 'ACTIVE', 'WARNING', 'DISABLED'].includes(upperKey)) {
+        if (typeof theme[key] === 'string' && theme[key].startsWith('#')) {
+          extraColors[upperKey] = theme[key];
+        }
+      }
+    });
+
+    const formatColorVal = (hex: string) => `"${hex.toUpperCase()}"`;
+
+    const colorsLines = [
+      ...Object.entries(coreColors).map(([k, v]) => `${k}: ${formatColorVal(v)}`),
+      "",
+      ...Object.entries(extraColors).map(([k, v]) => `${k}: ${formatColorVal(v)}`)
+    ].map(line => line ? `  ${line}` : '').join('\n');
+
+    return `name: ${meta.name}
+author: ${meta.author}
+info: ${meta.info}
+
 colors:
-  PRIMARY1: ${to0x(theme.primary1)}
-  PRIMARY2: ${to0x(theme.primary2)}
-  PRIMARY3: ${to0x(theme.primary3)}
-  SECONDARY1: ${to0x(theme.secondary1)}
-  SECONDARY2: ${to0x(theme.secondary2)}
-  SECONDARY3: ${to0x(theme.secondary3)}
-  FOCUS: ${to0x(theme.focus)}
-  EDIT: ${to0x(theme.edit)}
-  ACTIVE: ${to0x(theme.active)}
-  WARNING: ${to0x(theme.warning)}
-  DISABLED: ${to0x(theme.disabled)}`;
+${colorsLines}
+
+bars:
+  header:
+    color: HEADER
+    text_color: TEXT_STATUSBAR
+
+  footer:
+    color: FOOTER
+    text_color: TEXT_STATUSBAR
+
+menus:
+  background: MENU_BACKGROUND
+  title_color: MENU_TITLE
+  text_color: TEXT
+  selected_color: FOCUS
+  edit_color: EDIT
+  disabled_color: DISABLED
+
+views:
+  background: VIEW_BACKGROUND
+  text_color: VIEW_TEXT
+
+widgets:
+  active: ACTIVE
+  warning: WARNING
+  focus: FOCUS
+
+options:
+  rounded_buttons: true
+  rounded_panels: true
+  shadows: false`;
   }, [theme, meta]);
 
   const handleExportZip = async (exportType: 'standard' | 'tx16s') => {
@@ -405,11 +475,40 @@ colors:
           if (parts.length < 2) return;
           const rawKey = parts[0].trim();
           const val = parts.slice(1).join(':').trim();
-          if (rawKey.toLowerCase() === 'name') newMeta.name = val;
-          if (rawKey.toLowerCase() === 'author') newMeta.author = val;
-          if (rawKey.toLowerCase() === 'info') newMeta.info = val;
-          const match = (Object.keys(newTheme) as ThemeVariable[]).find(k => k.toUpperCase() === rawKey.toUpperCase());
-          if (match) newTheme[match] = from0x(val);
+          
+          const rawKeyLower = rawKey.toLowerCase();
+          
+          if (rawKeyLower === 'name') {
+            newMeta.name = val.replace(/['"]/g, '').trim();
+            return;
+          }
+          if (rawKeyLower === 'author') {
+            newMeta.author = val.replace(/['"]/g, '').trim();
+            return;
+          }
+          if (rawKeyLower === 'info') {
+            newMeta.info = val.replace(/['"]/g, '').trim();
+            return;
+          }
+
+          // Strip quotes from value
+          const cleanVal = val.replace(/['"]/g, '').trim();
+          
+          // Check if cleanVal is a color (looks like hex color #FFF, #FFFFFF, 0xFFF, 0xFFFFFF or similar)
+          const isColor = /^#([0-9a-fA-F]{3,8})$/.test(cleanVal) || 
+                          /^0[xX]([0-9a-fA-F]{3,8})$/.test(cleanVal) || 
+                          /^([0-9a-fA-F]{6})$/.test(cleanVal);
+          
+          if (isColor) {
+            // Check if it's one of core 11 keys
+            const match = (Object.keys(newTheme) as ThemeVariable[]).find(k => String(k).toLowerCase() === rawKeyLower);
+            if (match) {
+              newTheme[match] = from0x(cleanVal);
+            } else {
+              // Store as additional key on theme!
+              newTheme[rawKeyLower] = from0x(cleanVal);
+            }
+          }
         });
         setMeta(newMeta);
         setTheme(newTheme);

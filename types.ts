@@ -11,6 +11,19 @@ export interface EdgeTXTheme {
   active: string;
   warning: string;
   disabled: string;
+  // Support for new keys to guarantee forward compatibility
+  text?: string;
+  text_inverted?: string;
+  text_statusbar?: string;
+  header?: string;
+  footer?: string;
+  menu_title?: string;
+  menu_background?: string;
+  view_background?: string;
+  view_text?: string;
+  curve_axis?: string;
+  curve_line?: string;
+  [key: string]: any;
 }
 
 export type ThemeVariable = keyof EdgeTXTheme;
