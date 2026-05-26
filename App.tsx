@@ -19,9 +19,9 @@ const App: React.FC = () => {
       themeName: "Nome Tema",
       author: "Autore",
       info: "Info",
-      defaultThemeName: "Default",
-      defaultAuthor: "EdgeTX",
-      defaultInfo: "Default EdgeTX Theme",
+      defaultThemeName: "test",
+      defaultAuthor: "",
+      defaultInfo: "",
       import: "Importa .yml",
       export: "Esporta Template",
       exportTx: "Esporta TX16S MK3",
@@ -60,7 +60,9 @@ const App: React.FC = () => {
         edit: 'Campo in modifica: il colore che appare quando premi la rotella per cambiare un valore.',
         active: 'Stato ON: colore di checkbox attive, switch logici "accesi" e indicatori di stato.',
         warning: 'Allarmi: testo di errore, avvisi di sicurezza (stick non a zero) e icone di pericolo.',
-        disabled: 'Funzioni non disponibili: testo o icone di opzioni che non puoi cliccare.'
+        disabled: 'Funzioni non disponibili: testo o icone di opzioni che non puoi cliccare.',
+        qm_bg: 'Sfondo dei widget personalizzati o placeholder (es. tastiera/menu veloci).',
+        qm_fg: 'Testo dei widget personalizzati o placeholder (es. tastiera/menu veloci).'
       }
     },
     en: {
@@ -70,9 +72,9 @@ const App: React.FC = () => {
       themeName: "Theme Name",
       author: "Author",
       info: "Info",
-      defaultThemeName: "Default",
-      defaultAuthor: "EdgeTX",
-      defaultInfo: "Default EdgeTX Theme",
+      defaultThemeName: "test",
+      defaultAuthor: "",
+      defaultInfo: "",
       import: "Import .yml",
       export: "Export Template",
       exportTx: "Export TX16S MK3",
@@ -111,7 +113,9 @@ const App: React.FC = () => {
         edit: 'Field being edited: the color that appears when you press the scroll wheel to change a value.',
         active: 'ON state: active checkboxes, "on" logic switches and status indicators.',
         warning: 'Alarms: error text, safety warnings (stick not at zero) and danger icons.',
-        disabled: 'Functions not available: text or icons of options that you cannot click.'
+        disabled: 'Functions not available: text or icons of options that you cannot click.',
+        qm_bg: 'Color for custom widget background or placeholder (e.g. keyboard/quickmenus).',
+        qm_fg: 'Color for custom widget foreground or text (e.g. keyboard/quickmenus).'
       }
     }
   };
@@ -122,24 +126,24 @@ const App: React.FC = () => {
       try {
         const parsed = JSON.parse(saved);
         return {
-          theme: parsed.theme || INITIAL_THEME,
-          meta: parsed.meta || { name: 'Default', author: 'EdgeTX', info: 'Default EdgeTX Theme' },
+          theme: { ...INITIAL_THEME, ...parsed.theme },
+          meta: parsed.meta || { name: 'test', author: '', info: '' },
           droneImg: parsed.droneImg || "/assets/drone.png",
           backgroundImg: parsed.backgroundImg || null,
           modelLabel: parsed.modelLabel || 'MODEL',
-          lang: parsed.lang || 'en'
+          lang: (parsed.lang === 'it' || parsed.lang === 'en' ? parsed.lang : 'en') as 'it' | 'en'
         };
       } catch (e) {
         console.error("Error loading session", e);
       }
     }
     return {
-      theme: INITIAL_THEME,
-      meta: { name: 'Default', author: 'EdgeTX', info: 'Default EdgeTX Theme' },
+      theme: { ...INITIAL_THEME },
+      meta: { name: 'test', author: '', info: '' },
       droneImg: "/assets/drone.png",
       backgroundImg: null,
       modelLabel: 'MODEL',
-      lang: 'en'
+      lang: 'en' as 'it' | 'en'
     };
   };
 
@@ -245,6 +249,22 @@ const App: React.FC = () => {
 
   const yamlCode = useMemo(() => {
     const coreColors: Record<string, string> = {
+      COLOR_THEME_PRIMARY1: theme.primary1,
+      COLOR_THEME_PRIMARY2: theme.primary2,
+      COLOR_THEME_PRIMARY3: theme.primary3,
+      COLOR_THEME_SECONDARY1: theme.secondary1,
+      COLOR_THEME_SECONDARY2: theme.secondary2,
+      COLOR_THEME_SECONDARY3: theme.secondary3,
+      COLOR_THEME_FOCUS: theme.focus,
+      COLOR_THEME_EDIT: theme.edit,
+      COLOR_THEME_ACTIVE: theme.active,
+      COLOR_THEME_WARNING: theme.warning,
+      COLOR_THEME_DISABLED: theme.disabled,
+      COLOR_THEME_QM_BG: theme.qm_bg || theme.primary1,
+      COLOR_THEME_QM_FG: theme.qm_fg || theme.primary2,
+    };
+
+    const legacyColors: Record<string, string> = {
       PRIMARY1: theme.primary1,
       PRIMARY2: theme.primary2,
       PRIMARY3: theme.primary3,
@@ -256,44 +276,53 @@ const App: React.FC = () => {
       ACTIVE: theme.active,
       WARNING: theme.warning,
       DISABLED: theme.disabled,
+      QM_BG: theme.qm_bg || theme.primary1,
+      QM_FG: theme.qm_fg || theme.primary2,
     };
 
     const extraColors: Record<string, string> = {
       TEXT: theme.text || "#FFFFFF",
-      TEXT_INVERTED: theme.text_inverted || "#000000",
+      TEXT_INVERTED: theme.text_inverted || theme.secondary1 || "#1C1F26",
       TEXT_STATUSBAR: theme.text_statusbar || "#FFFFFF",
-      HEADER: theme.header || "#202020",
-      FOOTER: theme.footer || "#202020",
+      HEADER: theme.header || theme.secondary1 || "#1C1F26",
+      FOOTER: theme.footer || theme.secondary1 || "#1C1F26",
       MENU_TITLE: theme.menu_title || "#FFFFFF",
-      MENU_BACKGROUND: theme.menu_background || "#000000",
-      VIEW_BACKGROUND: theme.view_background || "#000000",
+      MENU_BACKGROUND: theme.menu_background || theme.secondary1 || "#1C1F26",
+      VIEW_BACKGROUND: theme.view_background || theme.secondary1 || "#1C1F26",
       VIEW_TEXT: theme.view_text || "#FFFFFF",
       CURVE_AXIS: theme.curve_axis || "#808080",
       CURVE_LINE: theme.curve_line || theme.primary1,
     };
 
     // Keep any other extra custom keys imported dynamically
-    const existingKeys = new Set([...Object.keys(coreColors), ...Object.keys(extraColors)]);
+    const existingKeys = new Set([
+      ...Object.keys(coreColors),
+      ...Object.keys(legacyColors),
+      ...Object.keys(extraColors)
+    ]);
     Object.keys(theme).forEach(key => {
       const upperKey = key.toUpperCase();
-      if (!existingKeys.has(upperKey) && !['PRIMARY1', 'PRIMARY2', 'PRIMARY3', 'SECONDARY1', 'SECONDARY2', 'SECONDARY3', 'FOCUS', 'EDIT', 'ACTIVE', 'WARNING', 'DISABLED'].includes(upperKey)) {
+      if (!existingKeys.has(upperKey) && !existingKeys.has(`COLOR_THEME_${upperKey}`)) {
         if (typeof theme[key] === 'string' && theme[key].startsWith('#')) {
           extraColors[upperKey] = theme[key];
         }
       }
     });
 
-    const formatColorVal = (hex: string) => `"${hex.toUpperCase()}"`;
+    const formatColorVal = (hex: string) => to0x(hex);
 
     const colorsLines = [
       ...Object.entries(coreColors).map(([k, v]) => `${k}: ${formatColorVal(v)}`),
       "",
+      ...Object.entries(legacyColors).map(([k, v]) => `${k}: ${formatColorVal(v)}`),
+      "",
       ...Object.entries(extraColors).map(([k, v]) => `${k}: ${formatColorVal(v)}`)
     ].map(line => line ? `  ${line}` : '').join('\n');
 
-    return `name: ${meta.name}
-author: ${meta.author}
-info: ${meta.info}
+    return `summary:
+  name: "${meta.name}"
+  author: "${meta.author}"
+  info: "${meta.info}"
 
 colors:
 ${colorsLines}
@@ -500,8 +529,9 @@ options:
                           /^([0-9a-fA-F]{6})$/.test(cleanVal);
           
           if (isColor) {
+            const normalizedKey = rawKeyLower.replace(/^color_theme_/, '');
             // Check if it's one of core 11 keys
-            const match = (Object.keys(newTheme) as ThemeVariable[]).find(k => String(k).toLowerCase() === rawKeyLower);
+            const match = (Object.keys(newTheme) as ThemeVariable[]).find(k => String(k).toLowerCase() === normalizedKey);
             if (match) {
               newTheme[match] = from0x(cleanVal);
             } else {

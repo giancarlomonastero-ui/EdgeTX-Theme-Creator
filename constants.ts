@@ -55,21 +55,33 @@ export const VARIABLE_METADATA: VariableMeta[] = [
     key: 'disabled',
     label: 'DISABLED',
     description: 'Functions not available: text or icons of options that cannot be clicked.'
+  },
+  {
+    key: 'qm_bg',
+    label: 'QM_BG',
+    description: 'QuickMenu/Screnshot3-placeholder background color.'
+  },
+  {
+    key: 'qm_fg',
+    label: 'QM_FG',
+    description: 'QuickMenu/Screenshot3-placeholder foreground/text color.'
   }
 ];
 
 export const INITIAL_THEME: EdgeTXTheme = {
-  primary1: '#FF9E00',
-  primary2: '#F0F0F0',
-  primary3: '#303030',
-  secondary1: '#000000',
-  secondary2: '#FFFFFF',
-  secondary3: '#808080',
-  focus: '#FF9E00',
-  edit: '#00A0FF',
-  active: '#00D000',
-  warning: '#FFD000',
-  disabled: '#606060'
+  primary1: '#000000',
+  primary2: '#F8FCF8',
+  primary3: '#083C60',
+  secondary1: '#105C98',
+  secondary2: '#B0E0F0',
+  secondary3: '#E0ECF0',
+  focus: '#10A0E0',
+  edit: '#009808',
+  active: '#F8DC00',
+  warning: '#E00000',
+  disabled: '#888C88',
+  qm_bg: '#000000',
+  qm_fg: '#F8FCF8'
 };
 
 export const PRESETS: Record<string, EdgeTXTheme> = {
@@ -85,6 +97,8 @@ export const PRESETS: Record<string, EdgeTXTheme> = {
     edit: '#00D4FF',
     active: '#4CAF50',
     warning: '#F44336',
-    disabled: '#444444'
+    disabled: '#444444',
+    qm_bg: '#1A1A1A',
+    qm_fg: '#FFFFFF'
   }
 };

@@ -312,17 +312,29 @@ const Preview: React.FC<PreviewProps> = ({
 
           {activeScreen !== 'screenshot1' && (
             <div className="flex items-center gap-0">
-              {icons.map((icon, i) => (
-                <div key={i} className={isMixerScreen ? 'px-[3px]' : ''} onClick={(e) => { e.stopPropagation(); onVariableClick(isMixerScreen && i === 3 ? 'active' : 'primary2'); }}>
-                  {isMixerScreen && i === 3 ? (
-                    <div style={{ backgroundColor: theme.focus, padding: '6px 2px' }}>
-                      {icon}
-                    </div>
-                  ) : (
-                    icon
-                  )}
-                </div>
-              ))}
+              {icons.map((icon, i) => {
+                const isMixerHighlight = isMixerScreen && i === 3;
+                return (
+                  <div 
+                    key={i} 
+                    className={isMixerScreen ? (isMixerHighlight ? 'px-[3px] cursor-default' : 'px-[3px] cursor-pointer') : 'cursor-pointer'} 
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      if (!isMixerHighlight) {
+                        onVariableClick('primary2'); 
+                      }
+                    }}
+                  >
+                    {isMixerHighlight ? (
+                      <div style={{ backgroundColor: theme.focus, padding: '11px 2px', margin: '-5px 0' }}>
+                        {icon}
+                      </div>
+                    ) : (
+                      icon
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
 
@@ -335,6 +347,19 @@ const Preview: React.FC<PreviewProps> = ({
                 <img src="/images/mask_widget_txbat_full.svg" alt="battery" style={{ height: '12px', width: 'auto' }} />
               </div>
             )}
+            {activeScreen === 'screenshot1' && (
+              <div 
+                className="flex items-end gap-[1px] h-[31px] mb-[2px] cursor-pointer select-none shrink-0 pointer-events-auto transition-all duration-150 hover:opacity-90 active:scale-95"
+                style={{ ...getHighlightStyle('primary3') }}
+                onClick={(e) => { e.stopPropagation(); onVariableClick('primary3'); }}
+              >
+                <div className="w-[5px] h-[6px] shrink-0 pointer-events-none" style={{ backgroundColor: '#FFFFFF' }} />
+                <div className="w-[5px] h-[12px] shrink-0 pointer-events-none" style={{ backgroundColor: '#FFFFFF' }} />
+                <div className="w-[5px] h-[18px] shrink-0 pointer-events-none" style={{ backgroundColor: theme.primary3 }} />
+                <div className="w-[5px] h-[24px] shrink-0 pointer-events-none" style={{ backgroundColor: theme.primary3 }} />
+                <div className="w-[5px] h-[31px] shrink-0 pointer-events-none" style={{ backgroundColor: theme.primary3 }} />
+              </div>
+            )}
             <div className="flex flex-col items-end leading-[0.9] font-bold text-white ml-1 pointer-events-none">
               <span className="text-[11px] tracking-tight mb-[1px] uppercase">{formatDate(now)}</span>
               <span className="text-[18px] font-black tracking-tight">{formatTime(now)}</span>
@@ -342,9 +367,12 @@ const Preview: React.FC<PreviewProps> = ({
           </div>
         </div>
         {isMixerScreen && (
-          <div className="w-full h-8 flex items-center justify-start border-b-[1px] shrink-0 mt-[3px]" style={{ backgroundColor: theme.secondary1, borderColor: theme.primary1, ...getHighlightStyle('secondary1') }} onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}>
-            <span className="text-[14px] font-bold uppercase tracking-tight pl-[15px]" style={{ color: theme.primary2, ...getHighlightStyle('primary2') }} onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}>MIXES</span>
-          </div>
+          <>
+            <div className="h-[3px] w-full shrink-0" style={{ backgroundColor: theme.secondary3 }} />
+            <div className="w-full h-8 flex items-center justify-start border-b-[1px] shrink-0" style={{ backgroundColor: theme.secondary1, borderColor: theme.primary1, ...getHighlightStyle('secondary1') }} onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}>
+              <span className="text-[14px] font-bold uppercase tracking-tight pl-[15px]" style={{ color: theme.primary2, ...getHighlightStyle('primary2') }} onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}>MIXES</span>
+            </div>
+          </>
         )}
       </div>
     );
@@ -464,14 +492,13 @@ const Preview: React.FC<PreviewProps> = ({
         <div className="w-full max-w-[650px] grid grid-cols-[45%_55%] gap-8">
           <div className="flex flex-col justify-center translate-y-[20px]">
             <div className="border-[1.5px] overflow-hidden shadow-lg rounded-sm" style={{ borderColor: theme.primary1, ...getHighlightStyle('primary1') }} onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}>
-              <div className="bg-black/5 px-2 py-1 border-b text-[10px] font-black uppercase tracking-widest" style={{ borderColor: theme.primary1, color: theme.primary1 }}>Widget &gt; Outputs</div>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((ch) => (
                 <div key={ch} className="grid grid-cols-[50px_1fr_50px] h-[22px] items-center border-b last:border-b-0" style={{ borderColor: theme.primary1, backgroundColor: 'transparent' }}>
-                  <div className="px-2 font-black text-[12px]" style={{ color: theme.primary1 }}>CH{ch}</div>
+                  <div className="px-2 font-black text-[12px]" style={{ color: theme.primary1 }} onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}>CH{ch}</div>
                   <div className="h-full border-x flex items-center px-1" style={{ borderColor: theme.primary1 }}>
                     <div className="h-[60%] rounded-full shadow-inner" style={{ width: ch === 3 ? '60%' : (ch === 1 ? '40%' : (ch === 7 ? '20%' : (ch === 9 ? '35%' : '10%'))), backgroundColor: theme.secondary1, ...getHighlightStyle('secondary1') }} onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}></div>
                   </div>
-                  <div className="px-2 text-right font-bold text-[12px]" style={{ color: theme.secondary1, ...getHighlightStyle('secondary1') }} onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}>{ch === 3 ? '60%' : (ch === 1 ? '40%' : (ch === 7 ? '20%' : (ch === 9 ? '35%' : '0%')))}</div>
+                  <div className="px-2 text-right font-bold text-[12px]" style={{ color: theme.primary1, ...getHighlightStyle('primary1') }} onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}>{ch === 3 ? '60%' : (ch === 1 ? '40%' : (ch === 7 ? '20%' : (ch === 9 ? '35%' : '0%')))}</div>
                 </div>
               ))}
             </div>
@@ -506,35 +533,80 @@ const Preview: React.FC<PreviewProps> = ({
   );
 
   const renderScreenshot2 = () => {
-    const MixerRow = ({ channel, name, active = false }: { channel: string; name: string; active?: boolean }) => (
-      <div 
-        className="flex items-center gap-3 rounded-2xl overflow-hidden border shadow-sm cursor-pointer" 
-        style={{ 
-          backgroundColor: theme.primary2, 
-          borderColor: active ? theme.focus : theme.secondary2, 
-          borderWidth: active ? '3px' : '2px',
-          ...getHighlightStyle('primary2')
-        }}
-        onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}
-      >
-        <div className="min-w-[55px] px-3 py-2 rounded-l-2xl font-bold uppercase text-[12px]" style={{ color: theme.primary1 }}>{channel}</div>
+    const MixerRow = ({ channel, name }: { channel: string; name: string }) => {
+      const isCH2 = channel === 'CH2';
+      const borderVar = isCH2 ? 'focus' : 'secondary2';
+      return (
         <div 
-          className="flex-1 flex items-center justify-between gap-4 px-4 py-3 rounded-r-2xl cursor-pointer" 
-          style={{ backgroundColor: theme.active, color: theme.primary1, ...getHighlightStyle('active') }}
-          onClick={(e) => { e.stopPropagation(); onVariableClick('active'); }}
+          className="flex items-center gap-3 rounded-2xl overflow-hidden border shadow-sm cursor-pointer" 
+          style={{ 
+            backgroundColor: theme.primary2, 
+            borderColor: isCH2 ? theme.focus : theme.secondary2, 
+            borderWidth: isCH2 ? '5px' : '2px',
+            ...getHighlightStyle(borderVar)
+          }}
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            onVariableClick(borderVar);
+          }}
         >
-          <div className="font-black text-sm">100%</div>
-          <div className="inline-flex items-center gap-2 text-sm font-bold uppercase">
-            {name}
+          <div 
+            className="min-w-[55px] px-3 py-2 rounded-l-2xl font-bold uppercase text-[12px] cursor-pointer" 
+            style={{ 
+              backgroundColor: theme.primary2,
+              color: theme.primary1,
+              ...getHighlightStyle('primary2')
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onVariableClick('primary2');
+            }}
+          >
+            <span 
+              className="cursor-pointer"
+              style={{ ...getHighlightStyle('primary1') }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onVariableClick('primary1');
+              }}
+            >
+              {channel}
+            </span>
+          </div>
+          <div 
+            className="flex-1 flex items-center justify-between gap-4 px-4 py-3 rounded-r-2xl cursor-pointer" 
+            style={{ backgroundColor: theme.active, color: theme.primary1, ...getHighlightStyle('active') }}
+            onClick={(e) => { e.stopPropagation(); onVariableClick('active'); }}
+          >
+            <div 
+              className="font-black text-sm cursor-pointer" 
+              style={{ ...getHighlightStyle('primary1') }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onVariableClick('primary1');
+              }}
+            >
+              100%
+            </div>
+            <div 
+              className="inline-flex items-center gap-2 text-sm font-bold uppercase cursor-pointer" 
+              style={{ ...getHighlightStyle('primary1') }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onVariableClick('primary1');
+              }}
+            >
+              {name}
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    };
 
     return (
       <div className="flex-grow flex flex-col overflow-hidden relative" style={{ backgroundColor: theme.secondary3 }}>
         <div className="px-4 space-y-3 flex-1 overflow-hidden mt-[10px]">
-          <MixerRow channel="CH1" name="Ail" active />
+          <MixerRow channel="CH1" name="Ail" />
           <MixerRow channel="CH2" name="Ele" />
           <MixerRow channel="CH3" name="Thr" />
           <MixerRow channel="CH4" name="Rud" />
@@ -546,14 +618,66 @@ const Preview: React.FC<PreviewProps> = ({
   };
 
   const renderScreenshot3 = () => {
+    // Parser helper for hex colors to RGB values
+    const hexToRgb = (hex: string) => {
+      if (!hex) return { r: 1, g: 1, b: 1 };
+      const cleanHex = hex.replace('#', '');
+      let r = 255, g = 255, b = 255;
+      if (cleanHex.length === 3) {
+        r = parseInt(cleanHex[0] + cleanHex[0], 16);
+        g = parseInt(cleanHex[1] + cleanHex[1], 16);
+        b = parseInt(cleanHex[2] + cleanHex[2], 16);
+      } else if (cleanHex.length === 6) {
+        r = parseInt(cleanHex.substring(0, 2), 16);
+        g = parseInt(cleanHex.substring(2, 4), 16);
+        b = parseInt(cleanHex.substring(4, 6), 16);
+      }
+      return { r: r / 255, g: g / 255, b: b / 255 };
+    };
+
+    const lightenColor = (hex: string, percent: number) => {
+      if (!hex) return '#333333';
+      const cleanHex = hex.replace('#', '');
+      let r = 255, g = 255, b = 255;
+      if (cleanHex.length === 3) {
+        r = parseInt(cleanHex[0] + cleanHex[0], 16);
+        g = parseInt(cleanHex[1] + cleanHex[1], 16);
+        b = parseInt(cleanHex[2] + cleanHex[2], 16);
+      } else if (cleanHex.length === 6) {
+        r = parseInt(cleanHex.substring(0, 2), 16);
+        g = parseInt(cleanHex.substring(2, 4), 16);
+        b = parseInt(cleanHex.substring(4, 6), 16);
+      }
+      const lr = Math.min(255, Math.round(r + (255 - r) * percent));
+      const lg = Math.min(255, Math.round(g + (255 - g) * percent));
+      const lb = Math.min(255, Math.round(b + (255 - b) * percent));
+      const toHexStr = (val: number) => {
+        const s = val.toString(16);
+        return s.length === 1 ? '0' + s : s;
+      };
+      return `#${toHexStr(lr)}${toHexStr(lg)}${toHexStr(lb)}`;
+    };
+
+    const rgb = hexToRgb(theme.qm_fg || '#FFFFFF');
+    const rf = rgb.r;
+    const gf = rgb.g;
+    const bf = rgb.b;
+
+    const rgbBgColors = hexToRgb(theme.qm_bg || '#000000');
+    const rb = rgbBgColors.r;
+    const gb = rgbBgColors.g;
+    const bb = rgbBgColors.b;
+
+    const lightenedQmBg = lightenColor(theme.qm_bg || '#000000', 0.15);
+
     // Fixed: Properly type the Key component as React.FC to include standard props like 'key'
     const Key: React.FC<{ label?: string, variant?: 'standard' | 'active' | 'focus', flex?: number, icon?: React.ReactNode }> = ({ label, variant = 'standard', flex = 1, icon }) => {
       let bgColor = theme.primary2; 
       let varKey: ThemeVariable = 'primary2';
-      let borderColor = 'rgba(0,0,0,0.2)';
+      const borderColor = theme.secondary2;
 
       if (variant === 'active') { bgColor = theme.active; varKey = 'active'; }
-      if (variant === 'focus') { bgColor = theme.focus; varKey = 'focus'; borderColor = theme.focus; }
+      if (variant === 'focus') { bgColor = theme.focus; varKey = 'focus'; }
       
       return (
         <div 
@@ -580,26 +704,146 @@ const Preview: React.FC<PreviewProps> = ({
             </svg>
           </div>
 
-          <div className="flex-grow flex flex-col gap-1">
-            {[1, 2, 3, 4].map((id) => (
-              <div key={id} className="w-[calc(92%-10px)] ml-auto h-10 border border-black/10 rounded-md overflow-hidden flex shadow-sm shrink-0">
-                <div 
-                  className="w-24 h-full flex items-center px-3 font-black text-[13px] shrink-0 cursor-pointer" 
-                  style={{ backgroundColor: theme.primary2, color: theme.primary1, ...getHighlightStyle('primary2') }}
-                  onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}
+          <div 
+            className="flex-none h-[160px] ml-auto rounded-md border border-black/10 shadow-sm cursor-pointer flex flex-col items-center justify-start pt-0 relative overflow-hidden" 
+            style={{ width: 'calc(92% - 190px)', backgroundColor: theme.qm_bg, ...getHighlightStyle('qm_bg') }}
+            onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+          >
+            <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }} aria-hidden="true">
+              <filter id="edgetx-colorise-qm-fg">
+                <feColorMatrix
+                  type="matrix"
+                  values={`0 0 0 ${rf} 0  0 0 0 ${gf} 0  0 0 0 ${bf} 0  -1 0 0 1 0`}
+                />
+              </filter>
+              <filter id="edgetx-colorise-qm-bg">
+                <feColorMatrix
+                  type="matrix"
+                  values={`0 0 0 ${rb} 0  0 0 0 ${gb} 0  0 0 0 ${bb} 0  -1 0 0 1 0`}
+                />
+              </filter>
+            </svg>
+
+            {/* EdgeTX Logo at the top-center */}
+            <div className="w-full flex justify-center shrink-0 pointer-events-none select-none">
+              <img 
+                src="/images/mask_menu_edgetx.svg" 
+                alt="EdgeTX logo"
+                style={{ width: '122px', height: '25px', filter: 'url(#edgetx-colorise-qm-fg)', border: 'none', outline: 'none', background: 'transparent' }} 
+              />
+            </div>
+            
+            <div className="flex-grow w-full flex items-center justify-center px-1 pb-1.5 gap-[6px]">
+              {/* Column 1: Manage Models */}
+              <div 
+                className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
+                style={{ backgroundColor: lightenedQmBg, ...getHighlightStyle('qm_bg') }}
+                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+              >
+                <div
+                  className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
+                  style={{ ...getHighlightStyle('qm_fg') }}
+                  onClick={(e) => { e.stopPropagation(); onVariableClick('qm_fg'); }}
                 >
-                  CH{id}
-                </div>
-                <div className="flex-grow h-full border-[2.5px] flex items-center px-4 gap-2 cursor-pointer shadow-inner" 
-                     style={{ backgroundColor: theme.active, borderColor: theme.focus, ...getHighlightStyle('active') }}
-                     onClick={(e) => { e.stopPropagation(); onVariableClick('active'); }}>
-                  <span className="font-black text-[14px]" style={{ color: theme.primary1 }}>100%</span>
-                  <span className="font-mono font-bold text-[14px]" style={{ color: theme.primary1 }}>
-                    I_{id === 1 ? 'Ail' : id === 2 ? 'Ele' : id === 3 ? 'Thr' : 'Rud'}
+                  <img 
+                    src="/images/mask_icon_menu_manage_models.svg" 
+                    alt="manage_models"
+                    style={{ width: '42px', height: '42px', filter: 'url(#edgetx-colorise-qm-fg)', border: 'none', outline: 'none', background: 'transparent' }} 
+                  />
+                  <span className="text-[12px] font-bold leading-[1.2] mt-[4px]" style={{ color: theme.qm_fg }}>
+                    Manage<br />Models
                   </span>
                 </div>
               </div>
-            ))}
+
+              {/* Column 2: Channel Monitor (SELECTED) */}
+              <div 
+                className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
+                style={{ backgroundColor: theme.qm_fg, ...getHighlightStyle('qm_bg') }}
+                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+              >
+                <div
+                  className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
+                  style={{ ...getHighlightStyle('qm_fg') }}
+                  onClick={(e) => { e.stopPropagation(); onVariableClick('qm_fg'); }}
+                >
+                  <img 
+                    src="/images/mask_icon_tools_monitor_ch.svg" 
+                    alt="monitor_ch"
+                    style={{ width: '42px', height: '42px', filter: 'url(#edgetx-colorise-qm-bg)', border: 'none', outline: 'none', background: 'transparent' }} 
+                  />
+                  <span className="text-[12px] font-bold leading-[1.2] mt-[4px]" style={{ color: theme.qm_bg }}>
+                    Channel<br />Monitor
+                  </span>
+                </div>
+              </div>
+
+              {/* Column 3: Model Setting */}
+              <div 
+                className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
+                style={{ backgroundColor: lightenedQmBg, ...getHighlightStyle('qm_bg') }}
+                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+              >
+                <div
+                  className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
+                  style={{ ...getHighlightStyle('qm_fg') }}
+                  onClick={(e) => { e.stopPropagation(); onVariableClick('qm_fg'); }}
+                >
+                  <img 
+                    src="/images/mask_icon_model_general.svg" 
+                    alt="model_general"
+                    style={{ width: '42px', height: '42px', filter: 'url(#edgetx-colorise-qm-fg)', border: 'none', outline: 'none', background: 'transparent' }} 
+                  />
+                  <span className="text-[12px] font-bold leading-[1.2] mt-[4px]" style={{ color: theme.qm_fg }}>
+                    Model<br />Setting
+                  </span>
+                </div>
+              </div>
+
+              {/* Column 4: Radio Setting */}
+              <div 
+                className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
+                style={{ backgroundColor: lightenedQmBg, ...getHighlightStyle('qm_bg') }}
+                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+              >
+                <div
+                  className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
+                  style={{ ...getHighlightStyle('qm_fg') }}
+                  onClick={(e) => { e.stopPropagation(); onVariableClick('qm_fg'); }}
+                >
+                  <img 
+                    src="/images/mask_icon_radio_general.svg" 
+                    alt="radio_general"
+                    style={{ width: '42px', height: '42px', filter: 'url(#edgetx-colorise-qm-fg)', border: 'none', outline: 'none', background: 'transparent' }} 
+                  />
+                  <span className="text-[12px] font-bold leading-[1.2] mt-[4px]" style={{ color: theme.qm_fg }}>
+                    Radio<br />Setting
+                  </span>
+                </div>
+              </div>
+
+              {/* Column 5: UI Setup */}
+              <div 
+                className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
+                style={{ backgroundColor: lightenedQmBg, ...getHighlightStyle('qm_bg') }}
+                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+              >
+                <div
+                  className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
+                  style={{ ...getHighlightStyle('qm_fg') }}
+                  onClick={(e) => { e.stopPropagation(); onVariableClick('qm_fg'); }}
+                >
+                  <img 
+                    src="/images/mask_icon_menu_tools.svg" 
+                    alt="menu_tools"
+                    style={{ width: '42px', height: '42px', filter: 'url(#edgetx-colorise-qm-fg)', border: 'none', outline: 'none', background: 'transparent' }} 
+                  />
+                  <span className="text-[12px] font-bold leading-[1.2] mt-[4px] whitespace-nowrap" style={{ color: theme.qm_fg }}>
+                    UI Setup
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -635,8 +879,8 @@ const Preview: React.FC<PreviewProps> = ({
              <Key variant="active" icon={<svg viewBox="0 0 24 24" className="w-4 h-4" fill={theme.primary1}><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>} />
              <Key variant="active" icon={<svg viewBox="0 0 24 24" className="w-5 h-5" fill={theme.primary1}><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>} />
              <div 
-               className="flex-[4] rounded-md border border-black/10 shadow-inner cursor-pointer" 
-               style={{ backgroundColor: theme.primary2, ...getHighlightStyle('primary2') }}
+               className="flex-[4] rounded-md border-2 shadow-inner cursor-pointer" 
+               style={{ backgroundColor: theme.primary2, borderColor: theme.secondary2, ...getHighlightStyle('primary2') }}
                onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}
              ></div>
              <Key variant="active" icon={<svg viewBox="0 0 24 24" className="w-5 h-5" fill={theme.primary1}><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>} />
@@ -729,15 +973,15 @@ const Preview: React.FC<PreviewProps> = ({
             }}
             onClick={() => onVariableClick('secondary3')}
           >
-            {backgroundImage && (
+            {(backgroundImage || "/background.png") && (
               <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-                  <img src={backgroundImage} alt="Background" className="w-full h-full object-cover opacity-100" />
+                  <img src={backgroundImage || "/background.png"} alt="Background" className="w-full h-full object-cover opacity-100" />
               </div>
             )}
 
             <div className="relative z-10 flex flex-col h-full">
               {renderTopBar()}
-              <div className="h-[3px] w-full shrink-0" style={{ backgroundColor: backgroundImage ? 'transparent' : theme.secondary3 }} onClick={(e) => { e.stopPropagation(); onVariableClick('secondary3'); }}></div>
+              <div className="h-[3px] w-full shrink-0" style={{ backgroundColor: (backgroundImage || "/background.png") ? 'transparent' : theme.secondary3 }} onClick={(e) => { e.stopPropagation(); onVariableClick('secondary3'); }}></div>
               {activeScreen === 'screenshot1' && renderScreenshot1()}
               {activeScreen === 'screenshot2' && renderScreenshot2()}
               {activeScreen === 'screenshot3' && renderScreenshot3()}

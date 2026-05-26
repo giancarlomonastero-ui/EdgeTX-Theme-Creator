@@ -11,6 +11,8 @@ export interface EdgeTXTheme {
   active: string;
   warning: string;
   disabled: string;
+  qm_bg: string;
+  qm_fg: string;
   // Support for new keys to guarantee forward compatibility
   text?: string;
   text_inverted?: string;

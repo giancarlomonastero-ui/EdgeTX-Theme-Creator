@@ -1,6 +1,8 @@
 {
-  "name": "",
-  "description": "",
+  "name": "EdgeTX Theme Designer",
+  "description": "An online visual color theme designer and preset generator for EdgeTX.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
