@@ -391,15 +391,19 @@ const Preview: React.FC<PreviewProps> = ({
 
   const VerticalSlot = ({ railPos = '50%', scalePos = '50%', isLeft = true }: { railPos?: string, scalePos?: string, isLeft?: boolean }) => (
     <div className={`flex items-center h-full gap-3 ${!isLeft ? 'flex-row-reverse' : ''}`}>
-      <div className="flex flex-col items-center justify-between h-full py-2 relative w-[24px]">
+      <div 
+        className="flex flex-col items-center justify-between h-full py-2 relative w-[24px] cursor-pointer"
+        style={{ ...getHighlightStyle('secondary1') }}
+        onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}
+      >
         {Array.from({ length: 31 }).map((_, i) => (
           <div 
             key={i} 
             className={`h-[1px] ${i % 5 === 0 ? 'w-5' : 'w-2.5'}`}
-            style={{ backgroundColor: theme.primary1, opacity: 0.4 }}
+            style={{ backgroundColor: theme.secondary1, opacity: 0.6 }}
           ></div>
         ))}
-        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center" style={{ top: scalePos }}>
+        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center p-1" style={{ top: scalePos }} onClick={(e) => e.stopPropagation()}>
            <Handle />
         </div>
       </div>
@@ -431,16 +435,20 @@ const Preview: React.FC<PreviewProps> = ({
         </div>
       </div>
       <div className="w-full relative h-[24px]">
-        <div className="flex justify-between items-center w-full h-full">
+        <div 
+          className="flex justify-between items-center w-full h-full cursor-pointer"
+          style={{ ...getHighlightStyle('secondary1') }}
+          onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}
+        >
           {Array.from({ length: 31 }).map((_, i) => (
             <div 
               key={i} 
               className={`w-[1px] ${i % 5 === 0 ? 'h-6' : 'h-3'}`}
-              style={{ backgroundColor: theme.primary1, opacity: 0.4 }}
+              style={{ backgroundColor: theme.secondary1, opacity: 0.6 }}
             ></div>
           ))}
         </div>
-        <div className="absolute top-1/2 left-0 right-0 h-0">
+        <div className="absolute top-1/2 left-0 right-0 h-0" onClick={(e) => e.stopPropagation()}>
           <div className="absolute top-0 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center" style={{ left: railPos }}>
             <Handle />
           </div>
@@ -681,16 +689,40 @@ const Preview: React.FC<PreviewProps> = ({
       
       return (
         <div 
-          className="h-full rounded-md flex items-center justify-center border-2 shadow-sm cursor-pointer select-none transition-transform active:scale-95"
+          className="h-full rounded-md p-[2px] cursor-pointer select-none transition-transform active:scale-95 relative"
           style={{ 
-            backgroundColor: bgColor, 
-            borderColor: borderColor,
             flex: flex, 
-            ...getHighlightStyle(varKey) 
+            backgroundColor: borderColor,
+            ...getHighlightStyle('secondary2')
           }}
-          onClick={(e) => { e.stopPropagation(); onVariableClick(varKey); }}
+          onClick={(e) => { e.stopPropagation(); onVariableClick('secondary2'); }}
         >
-          {icon ? icon : <span className="text-[14px] font-bold" style={{ color: theme.primary1 }}>{label}</span>}
+          <div
+            className="w-full h-full rounded-[4px] flex items-center justify-center shadow-sm cursor-pointer"
+            style={{ 
+              backgroundColor: bgColor, 
+              ...getHighlightStyle(varKey) 
+            }}
+            onClick={(e) => { e.stopPropagation(); onVariableClick(varKey); }}
+          >
+            {icon ? (
+              <div 
+                className="cursor-pointer flex items-center justify-center w-full h-full"
+                style={{ ...getHighlightStyle('primary1') }}
+                onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}
+              >
+                {icon}
+              </div>
+            ) : (
+              <span 
+                className="text-[14px] font-bold cursor-pointer inline-block" 
+                style={{ color: theme.primary1, ...getHighlightStyle('primary1') }}
+                onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}
+              >
+                {label}
+              </span>
+            )}
+          </div>
         </div>
       );
     };
@@ -737,8 +769,7 @@ const Preview: React.FC<PreviewProps> = ({
               {/* Column 1: Manage Models */}
               <div 
                 className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
-                style={{ backgroundColor: lightenedQmBg, ...getHighlightStyle('qm_bg') }}
-                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+                style={{ backgroundColor: lightenedQmBg }}
               >
                 <div
                   className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
@@ -759,8 +790,7 @@ const Preview: React.FC<PreviewProps> = ({
               {/* Column 2: Channel Monitor (SELECTED) */}
               <div 
                 className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
-                style={{ backgroundColor: theme.qm_fg, ...getHighlightStyle('qm_bg') }}
-                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+                style={{ backgroundColor: theme.qm_fg }}
               >
                 <div
                   className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
@@ -781,8 +811,7 @@ const Preview: React.FC<PreviewProps> = ({
               {/* Column 3: Model Setting */}
               <div 
                 className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
-                style={{ backgroundColor: lightenedQmBg, ...getHighlightStyle('qm_bg') }}
-                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+                style={{ backgroundColor: lightenedQmBg }}
               >
                 <div
                   className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
@@ -803,8 +832,7 @@ const Preview: React.FC<PreviewProps> = ({
               {/* Column 4: Radio Setting */}
               <div 
                 className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
-                style={{ backgroundColor: lightenedQmBg, ...getHighlightStyle('qm_bg') }}
-                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+                style={{ backgroundColor: lightenedQmBg }}
               >
                 <div
                   className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
@@ -825,8 +853,7 @@ const Preview: React.FC<PreviewProps> = ({
               {/* Column 5: UI Setup */}
               <div 
                 className="flex flex-col items-center justify-center flex-1 w-full max-w-[84px] h-[100px] rounded-md pointer-events-auto cursor-pointer select-none text-center p-1.5 transition-all hover:brightness-110 active:scale-98"
-                style={{ backgroundColor: lightenedQmBg, ...getHighlightStyle('qm_bg') }}
-                onClick={(e) => { e.stopPropagation(); onVariableClick('qm_bg'); }}
+                style={{ backgroundColor: lightenedQmBg }}
               >
                 <div
                   className="flex flex-col items-center justify-center w-full h-full rounded p-0.5 transition-all"
@@ -879,10 +906,16 @@ const Preview: React.FC<PreviewProps> = ({
              <Key variant="active" icon={<svg viewBox="0 0 24 24" className="w-4 h-4" fill={theme.primary1}><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>} />
              <Key variant="active" icon={<svg viewBox="0 0 24 24" className="w-5 h-5" fill={theme.primary1}><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>} />
              <div 
-               className="flex-[4] rounded-md border-2 shadow-inner cursor-pointer" 
-               style={{ backgroundColor: theme.primary2, borderColor: theme.secondary2, ...getHighlightStyle('primary2') }}
-               onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}
-             ></div>
+               className="flex-[4] rounded-md p-[2px] cursor-pointer" 
+               style={{ backgroundColor: theme.secondary2, ...getHighlightStyle('secondary2') }}
+               onClick={(e) => { e.stopPropagation(); onVariableClick('secondary2'); }}
+             >
+               <div
+                 className="w-full h-full rounded-[4px] shadow-inner"
+                 style={{ backgroundColor: theme.primary2, ...getHighlightStyle('primary2') }}
+                 onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}
+               ></div>
+             </div>
              <Key variant="active" icon={<svg viewBox="0 0 24 24" className="w-5 h-5" fill={theme.primary1}><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>} />
              <Key variant="active" icon={<svg viewBox="0 0 24 24" className="w-5 h-5" fill={theme.primary1}><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>} />
            </div>
@@ -890,61 +923,101 @@ const Preview: React.FC<PreviewProps> = ({
 
         <div className="flex items-center gap-2 px-2 h-9 mb-1 shrink-0">
           <div className="flex gap-3 items-center mr-2">
-            <div className="w-14 h-7 rounded-full border-[2.5px] flex items-center justify-start px-0.5 cursor-pointer transition-all shadow-sm" 
+            <div className="w-14 h-7 rounded-full p-[2.5px] cursor-pointer transition-all shadow-sm" 
                  style={{ 
-                   backgroundColor: theme.primary2, 
-                   borderColor: isFirstToggleFocused ? theme.focus : theme.secondary2,
-                   ...getHighlightStyle('primary2') 
+                   backgroundColor: isFirstToggleFocused ? theme.focus : theme.secondary2,
+                   ...getHighlightStyle(isFirstToggleFocused ? 'focus' : 'secondary2') 
                  }}
                  onClick={(e) => { 
                    e.stopPropagation(); 
-                   setIsFirstToggleFocused(!isFirstToggleFocused);
-                   onVariableClick('primary2'); 
+                   onVariableClick(isFirstToggleFocused ? 'focus' : 'secondary2'); 
                  }}>
-              <div className="w-5 h-5 rounded-full shadow-md border border-black/5" 
-                   style={{ backgroundColor: theme.secondary1, ...getHighlightStyle('secondary1') }} 
-                   onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}>
+              <div className="w-full h-full rounded-full flex items-center justify-start px-0.5"
+                   style={{ backgroundColor: theme.primary2, ...getHighlightStyle('primary2') }}
+                   onClick={(e) => { 
+                     e.stopPropagation(); 
+                     setIsFirstToggleFocused(!isFirstToggleFocused);
+                     onVariableClick('primary2'); 
+                   }}>
+                <div className="w-5 h-5 rounded-full shadow-md border border-black/5" 
+                     style={{ backgroundColor: theme.secondary1, ...getHighlightStyle('secondary1') }} 
+                     onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}>
+                </div>
               </div>
             </div>
 
-            <div className="w-14 h-7 rounded-full border-[2.5px] flex items-center justify-end px-0.5 cursor-pointer transition-all shadow-sm" 
+            <div className="w-14 h-7 rounded-full p-[2.5px] cursor-pointer transition-all shadow-sm" 
                  style={{ 
-                   backgroundColor: theme.active, 
-                   borderColor: isSecondToggleFocused ? theme.focus : theme.secondary2,
-                   ...getHighlightStyle('active') 
+                   backgroundColor: isSecondToggleFocused ? theme.focus : theme.secondary2,
+                   ...getHighlightStyle(isSecondToggleFocused ? 'focus' : 'secondary2') 
                  }}
                  onClick={(e) => { 
                    e.stopPropagation(); 
-                   setIsSecondToggleFocused(!isSecondToggleFocused);
-                   onVariableClick('active'); 
+                   onVariableClick(isSecondToggleFocused ? 'focus' : 'secondary2'); 
                  }}>
-              <div className="w-5 h-5 rounded-full shadow-md border border-black/5" 
-                   style={{ backgroundColor: theme.secondary1, ...getHighlightStyle('secondary1') }} 
-                   onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}>
+              <div className="w-full h-full rounded-full flex items-center justify-end px-0.5"
+                   style={{ backgroundColor: theme.active, ...getHighlightStyle('active') }}
+                   onClick={(e) => { 
+                     e.stopPropagation(); 
+                     setIsSecondToggleFocused(!isSecondToggleFocused);
+                     onVariableClick('active'); 
+                   }}>
+                <div className="w-5 h-5 rounded-full shadow-md border border-black/5" 
+                     style={{ backgroundColor: theme.secondary1, ...getHighlightStyle('secondary1') }} 
+                     onClick={(e) => { e.stopPropagation(); onVariableClick('secondary1'); }}>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="flex-grow flex gap-1 h-full items-center">
-            <div className="flex-1 h-7 rounded-md border-2 flex items-center justify-center text-[10px] font-black uppercase cursor-pointer transition-all shadow-sm" 
-                 style={{ backgroundColor: theme.active, color: theme.primary1, borderColor: theme.secondary2, ...getHighlightStyle('active') }}
-                 onClick={(e) => { e.stopPropagation(); onVariableClick('active'); }}>
-              Active
+            <div className="flex-1 h-7 rounded-md p-[2px] cursor-pointer transition-all shadow-sm" 
+                 style={{ backgroundColor: theme.secondary2, ...getHighlightStyle('secondary2') }}
+                 onClick={(e) => { e.stopPropagation(); onVariableClick('secondary2'); }}>
+              <div className="w-full h-full rounded-[4px] flex items-center justify-center"
+                   style={{ backgroundColor: theme.active, ...getHighlightStyle('active') }}
+                   onClick={(e) => { e.stopPropagation(); onVariableClick('active'); }}>
+                <span className="text-[10px] font-black uppercase cursor-pointer"
+                      style={{ color: theme.primary1, ...getHighlightStyle('primary1') }}
+                      onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}>
+                  Active
+                </span>
+              </div>
             </div>
-            <div className="flex-1 h-7 rounded-md border-2 flex items-center justify-center text-[10px] font-black uppercase cursor-pointer transition-all shadow-sm" 
-                 style={{ backgroundColor: theme.primary2, color: theme.secondary1, borderColor: theme.secondary2, ...getHighlightStyle('primary2') }}
-                 onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}>
-              Regular
+            <div className="flex-1 h-7 rounded-md p-[2px] cursor-pointer transition-all shadow-sm" 
+                 style={{ backgroundColor: theme.secondary2, ...getHighlightStyle('secondary2') }}
+                 onClick={(e) => { e.stopPropagation(); onVariableClick('secondary2'); }}>
+              <div className="w-full h-full rounded-[4px] flex items-center justify-center"
+                   style={{ backgroundColor: theme.secondary2, ...getHighlightStyle('secondary2') }}
+                   onClick={(e) => { e.stopPropagation(); onVariableClick('secondary2'); }}>
+                <span className="text-[10px] font-black uppercase cursor-pointer"
+                      style={{ color: theme.primary1, ...getHighlightStyle('primary1') }}
+                      onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}>
+                  SECONDARY 2
+                </span>
+              </div>
             </div>
-            <div className="flex-1 h-7 rounded-md border-2 flex items-center justify-center text-[10px] font-black uppercase cursor-pointer transition-all shadow-sm" 
-                 style={{ backgroundColor: theme.edit, color: 'white', borderColor: theme.focus, ...getHighlightStyle('edit') }}
-                 onClick={(e) => { e.stopPropagation(); onVariableClick('edit'); }}>
-              Edit
+            <div className="flex-1 h-7 rounded-md p-[2px] cursor-pointer transition-all shadow-sm" 
+                 style={{ backgroundColor: theme.focus, ...getHighlightStyle('focus') }}
+                 onClick={(e) => { e.stopPropagation(); onVariableClick('focus'); }}>
+              <div className="w-full h-full rounded-[4px] flex items-center justify-center"
+                   style={{ backgroundColor: theme.edit, ...getHighlightStyle('edit') }}
+                   onClick={(e) => { e.stopPropagation(); onVariableClick('edit'); }}>
+                <span className="text-[10px] font-black uppercase cursor-pointer text-white">
+                  Edit
+                </span>
+              </div>
             </div>
-            <div className="flex-1 h-7 rounded-md border-2 flex items-center justify-center text-[10px] font-black uppercase cursor-pointer transition-all shadow-sm" 
-                 style={{ backgroundColor: theme.primary2, color: theme.secondary1, borderColor: theme.focus, ...getHighlightStyle('primary2') }}
-                 onClick={(e) => { e.stopPropagation(); onVariableClick('primary2'); }}>
-              Focus
+            <div className="flex-1 h-7 rounded-md p-[2px] cursor-pointer transition-all shadow-sm" 
+                 style={{ backgroundColor: theme.focus, ...getHighlightStyle('focus') }}
+                 onClick={(e) => { e.stopPropagation(); onVariableClick('focus'); }}>
+              <div className="w-full h-full rounded-[4px] flex items-center justify-center"
+                   style={{ backgroundColor: theme.focus, ...getHighlightStyle('focus') }}
+                   onClick={(e) => { e.stopPropagation(); onVariableClick('focus'); }}>
+                <span className="text-[10px] font-black uppercase cursor-pointer text-white">
+                  Focus
+                </span>
+              </div>
             </div>
           </div>
         </div>

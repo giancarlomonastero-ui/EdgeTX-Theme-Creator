@@ -19,7 +19,7 @@ const App: React.FC = () => {
       themeName: "Nome Tema",
       author: "Autore",
       info: "Info",
-      defaultThemeName: "test",
+      defaultThemeName: "",
       defaultAuthor: "",
       defaultInfo: "",
       import: "Importa .yml",
@@ -72,7 +72,7 @@ const App: React.FC = () => {
       themeName: "Theme Name",
       author: "Author",
       info: "Info",
-      defaultThemeName: "test",
+      defaultThemeName: "",
       defaultAuthor: "",
       defaultInfo: "",
       import: "Import .yml",
@@ -127,7 +127,7 @@ const App: React.FC = () => {
         const parsed = JSON.parse(saved);
         return {
           theme: { ...INITIAL_THEME, ...parsed.theme },
-          meta: parsed.meta || { name: 'test', author: '', info: '' },
+          meta: parsed.meta || { name: '', author: '', info: '' },
           droneImg: parsed.droneImg || "/assets/drone.png",
           backgroundImg: parsed.backgroundImg || null,
           modelLabel: parsed.modelLabel || 'MODEL',
@@ -139,7 +139,7 @@ const App: React.FC = () => {
     }
     return {
       theme: { ...INITIAL_THEME },
-      meta: { name: 'test', author: '', info: '' },
+      meta: { name: '', author: '', info: '' },
       droneImg: "/assets/drone.png",
       backgroundImg: null,
       modelLabel: 'MODEL',
