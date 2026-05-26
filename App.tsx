@@ -248,23 +248,7 @@ const App: React.FC = () => {
   };
 
   const yamlCode = useMemo(() => {
-    const coreColors: Record<string, string> = {
-      COLOR_THEME_PRIMARY1: theme.primary1,
-      COLOR_THEME_PRIMARY2: theme.primary2,
-      COLOR_THEME_PRIMARY3: theme.primary3,
-      COLOR_THEME_SECONDARY1: theme.secondary1,
-      COLOR_THEME_SECONDARY2: theme.secondary2,
-      COLOR_THEME_SECONDARY3: theme.secondary3,
-      COLOR_THEME_FOCUS: theme.focus,
-      COLOR_THEME_EDIT: theme.edit,
-      COLOR_THEME_ACTIVE: theme.active,
-      COLOR_THEME_WARNING: theme.warning,
-      COLOR_THEME_DISABLED: theme.disabled,
-      COLOR_THEME_QM_BG: theme.qm_bg || theme.primary1,
-      COLOR_THEME_QM_FG: theme.qm_fg || theme.primary2,
-    };
-
-    const legacyColors: Record<string, string> = {
+    const whitelistColors: Record<string, string> = {
       PRIMARY1: theme.primary1,
       PRIMARY2: theme.primary2,
       PRIMARY3: theme.primary3,
@@ -280,44 +264,11 @@ const App: React.FC = () => {
       QM_FG: theme.qm_fg || theme.primary2,
     };
 
-    const extraColors: Record<string, string> = {
-      TEXT: theme.text || "#FFFFFF",
-      TEXT_INVERTED: theme.text_inverted || theme.secondary1 || "#1C1F26",
-      TEXT_STATUSBAR: theme.text_statusbar || "#FFFFFF",
-      HEADER: theme.header || theme.secondary1 || "#1C1F26",
-      FOOTER: theme.footer || theme.secondary1 || "#1C1F26",
-      MENU_TITLE: theme.menu_title || "#FFFFFF",
-      MENU_BACKGROUND: theme.menu_background || theme.secondary1 || "#1C1F26",
-      VIEW_BACKGROUND: theme.view_background || theme.secondary1 || "#1C1F26",
-      VIEW_TEXT: theme.view_text || "#FFFFFF",
-      CURVE_AXIS: theme.curve_axis || "#808080",
-      CURVE_LINE: theme.curve_line || theme.primary1,
-    };
-
-    // Keep any other extra custom keys imported dynamically
-    const existingKeys = new Set([
-      ...Object.keys(coreColors),
-      ...Object.keys(legacyColors),
-      ...Object.keys(extraColors)
-    ]);
-    Object.keys(theme).forEach(key => {
-      const upperKey = key.toUpperCase();
-      if (!existingKeys.has(upperKey) && !existingKeys.has(`COLOR_THEME_${upperKey}`)) {
-        if (typeof theme[key] === 'string' && theme[key].startsWith('#')) {
-          extraColors[upperKey] = theme[key];
-        }
-      }
-    });
-
     const formatColorVal = (hex: string) => to0x(hex);
 
-    const colorsLines = [
-      ...Object.entries(coreColors).map(([k, v]) => `${k}: ${formatColorVal(v)}`),
-      "",
-      ...Object.entries(legacyColors).map(([k, v]) => `${k}: ${formatColorVal(v)}`),
-      "",
-      ...Object.entries(extraColors).map(([k, v]) => `${k}: ${formatColorVal(v)}`)
-    ].map(line => line ? `  ${line}` : '').join('\n');
+    const colorsLines = Object.entries(whitelistColors)
+      .map(([k, v]) => `  ${k}: ${formatColorVal(v)}`)
+      .join('\n');
 
     return `summary:
   name: "${meta.name}"
@@ -325,38 +276,7 @@ const App: React.FC = () => {
   info: "${meta.info}"
 
 colors:
-${colorsLines}
-
-bars:
-  header:
-    color: HEADER
-    text_color: TEXT_STATUSBAR
-
-  footer:
-    color: FOOTER
-    text_color: TEXT_STATUSBAR
-
-menus:
-  background: MENU_BACKGROUND
-  title_color: MENU_TITLE
-  text_color: TEXT
-  selected_color: FOCUS
-  edit_color: EDIT
-  disabled_color: DISABLED
-
-views:
-  background: VIEW_BACKGROUND
-  text_color: VIEW_TEXT
-
-widgets:
-  active: ACTIVE
-  warning: WARNING
-  focus: FOCUS
-
-options:
-  rounded_buttons: true
-  rounded_panels: true
-  shadows: false`;
+${colorsLines}`;
   }, [theme, meta]);
 
   const handleExportZip = async (exportType: 'standard' | 'tx16s') => {
