@@ -23,7 +23,7 @@ const App: React.FC = () => {
       defaultAuthor: "",
       defaultInfo: "",
       import: "Importa .yml",
-      export: "Esporta Template",
+      export: "Esporta Tema",
       exportTx: "Esporta TX16S MK3",
       exporting: "Esportazione...",
       instructions: "Dopo l’esportazione del template in formato ZIP, crea una cartella con lo stesso nome del template dentro /THEMES della MicroSD della radio (puoi collegare la radio al PC) e inserisci al suo interno tutti i file contenuti nello ZIP. Per impostare il template in EdgeTX vai in SYS/Themes",
@@ -76,7 +76,7 @@ const App: React.FC = () => {
       defaultAuthor: "",
       defaultInfo: "",
       import: "Import .yml",
-      export: "Export Template",
+      export: "Export Theme",
       exportTx: "Export TX16S MK3",
       exporting: "Exporting...",
       instructions: "After exporting the template in ZIP format, create a folder with the same name as the template inside /THEMES on the radio's MicroSD (you can connect the radio to your PC) and put all the files from the ZIP inside. To set the template in EdgeTX, go to SYS/Themes.",
@@ -296,35 +296,37 @@ ${colorsLines}`;
     const zip = new JSZip();
     zip.file("theme.yml", yamlCode);
 
-    if (backgroundImg) {
-      setExportStatus(translations[lang].statusBg as string);
-      try {
-        const bgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve(img);
-          img.onerror = reject;
-          img.src = backgroundImg;
-        });
-
-        const targetW = exportType === 'tx16s' ? 800 : 480;
-        const targetH = exportType === 'tx16s' ? 480 : 272;
-        
-        const fileName = exportType === 'tx16s' ? 'background.png' : 'background_480x272.png';
-
-        const bgCanvas = document.createElement('canvas');
-        bgCanvas.width = targetW;
-        bgCanvas.height = targetH;
-        const bgCtx = bgCanvas.getContext('2d');
-        if (bgCtx) {
-          bgCtx.imageSmoothingEnabled = true;
-          bgCtx.imageSmoothingQuality = 'high';
-          bgCtx.drawImage(bgImg, 0, 0, targetW, targetH);
-          const bgData = bgCanvas.toDataURL("image/png").split(',')[1];
-          zip.file(fileName, bgData, {base64: true});
+    const bgToProcess = backgroundImg || "/background.png";
+    setExportStatus(translations[lang].statusBg as string);
+    try {
+      const bgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new Image();
+        if (!bgToProcess.startsWith('data:')) {
+          img.crossOrigin = "anonymous";
         }
-      } catch (e) {
-        console.error("Error processing background", e);
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = bgToProcess;
+      });
+
+      const targetW = exportType === 'tx16s' ? 800 : 480;
+      const targetH = exportType === 'tx16s' ? 480 : 272;
+      
+      const fileName = exportType === 'tx16s' ? 'background.png' : 'background_480x272.png';
+
+      const bgCanvas = document.createElement('canvas');
+      bgCanvas.width = targetW;
+      bgCanvas.height = targetH;
+      const bgCtx = bgCanvas.getContext('2d');
+      if (bgCtx) {
+        bgCtx.imageSmoothingEnabled = true;
+        bgCtx.imageSmoothingQuality = 'high';
+        bgCtx.drawImage(bgImg, 0, 0, targetW, targetH);
+        const bgData = bgCanvas.toDataURL("image/png").split(',')[1];
+        zip.file(fileName, bgData, {base64: true});
       }
+    } catch (e) {
+      console.error("Error processing background", e);
     }
 
     const originalScreen = activeScreen;
