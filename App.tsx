@@ -10,6 +10,24 @@ type ScreenID = 'screenshot1' | 'screenshot2' | 'screenshot3';
 
 const STORAGE_KEY = 'edgetx_designer_session';
 
+const TARGET_RESOLUTIONS = [
+  {
+    id: '480x272' as const,
+    label: '480×272',
+    radios: 'RadioMaster TX16S MK1/MK2, Eachine TX16S, Jumper T16/T18/T15, FrSky Horus X10/X10S, FlySky NV14/EL18/PL18/PL18EV/PL18U, HelloRadioSky V16, FatFish F16'
+  },
+  {
+    id: '480x320' as const,
+    label: '480×320',
+    radios: 'Radiomaster TX15, FlySky ST16'
+  },
+  {
+    id: '800x480' as const,
+    label: '800×480',
+    radios: 'RadioMaster TX16S MK3'
+  }
+];
+
 const App: React.FC = () => {
   const translations = {
     it: {
@@ -160,7 +178,8 @@ const App: React.FC = () => {
   const [highlightedVar, setHighlightedVar] = useState<ThemeVariable | null>(null);
   const [selectedVar, setSelectedVar] = useState<ThemeVariable | null>(null);
   const [hoveredVar, setHoveredVar] = useState<ThemeVariable | null>(null);
-  const [isExporting, setIsExporting] = useState<false | 'standard' | 'tx16s'>(false);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [selectedResolution, setSelectedResolution] = useState<'480x272' | '480x320' | '800x480'>('480x272');
   const [exportProgress, setExportProgress] = useState(0);
   const [exportStatus, setExportStatus] = useState("");
   const [currentPage, setCurrentPage] = useState<'designer' | 'gallery' | 'splash'>('designer');
@@ -279,8 +298,8 @@ colors:
 ${colorsLines}`;
   }, [theme, meta]);
 
-  const handleExportZip = async (exportType: 'standard' | 'tx16s') => {
-    setIsExporting(exportType);
+  const handleExportZip = async () => {
+    setIsExporting(true);
     setExportProgress(5);
     setExportStatus(translations[lang].statusInit as string);
     window.scrollTo(0, 0);
@@ -309,10 +328,19 @@ ${colorsLines}`;
         img.src = bgToProcess;
       });
 
-      const targetW = exportType === 'tx16s' ? 800 : 480;
-      const targetH = exportType === 'tx16s' ? 480 : 272;
-      
-      const fileName = exportType === 'tx16s' ? 'background.png' : 'background_480x272.png';
+      let targetW = 480;
+      let targetH = 272;
+      let fileName = 'background_480x272.png';
+
+      if (selectedResolution === '800x480') {
+        targetW = 800;
+        targetH = 480;
+        fileName = 'background.png';
+      } else if (selectedResolution === '480x320') {
+        targetW = 480;
+        targetH = 320;
+        fileName = 'background_480x320.png';
+      }
 
       const bgCanvas = document.createElement('canvas');
       bgCanvas.width = targetW;
@@ -389,8 +417,8 @@ ${colorsLines}`;
       const url = URL.createObjectURL(content);
       const a = document.createElement('a');
       a.href = url;
-      const suffix = exportType === 'tx16s' ? '_tx16s_mk3' : '_package';
-      a.download = `${meta.name.toLowerCase().replace(/\s+/g, '_')}${suffix}.zip`;
+      const themeNameSlug = (meta.name || "theme").toLowerCase().replace(/\s+/g, '_');
+      a.download = `${themeNameSlug}_${selectedResolution}.zip`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -620,23 +648,55 @@ ${colorsLines}`;
               <div className="h-px bg-slate-800 w-full opacity-50"></div>
 
               <div className="flex flex-col gap-3">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">
+                  {lang === 'it' ? 'Risoluzione Target & Radio Compatibili' : 'Target Resolution & Compatible Radios'}
+                </label>
+                <div className="space-y-2">
+                  {TARGET_RESOLUTIONS.map((res) => {
+                    const isSelected = selectedResolution === res.id;
+                    return (
+                      <button
+                        key={res.id}
+                        type="button"
+                        onClick={() => setSelectedResolution(res.id)}
+                        className={`w-full text-left p-3 rounded-xl border transition-all flex flex-col cursor-pointer ${
+                          isSelected
+                            ? 'border-blue-500 bg-blue-900/20 shadow-md ring-1 ring-blue-500/20'
+                            : 'border-slate-800 bg-slate-950/40 hover:border-slate-700 hover:bg-slate-900/30'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 w-full">
+                          <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
+                            isSelected ? 'border-blue-500 text-blue-500' : 'border-slate-600'
+                          }`}>
+                            {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />}
+                          </span>
+                          <span className="text-xs font-bold text-slate-100">
+                            {res.label}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-slate-400 mt-1 leading-normal pl-6 font-medium">
+                          {res.radios}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="h-px bg-slate-800 w-full opacity-50 my-2"></div>
+
+              <div className="flex flex-col gap-3">
                 <input type="file" accept=".yml" ref={fileInputRef} onChange={handleImport} className="hidden" />
                 <button onClick={() => fileInputRef.current?.click()} className="w-full bg-slate-800 hover:bg-slate-700 text-white font-black py-3 rounded-xl text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 border border-slate-700">
                   {t('import')}
                 </button>
                 <button 
-                  onClick={() => handleExportZip('standard')} 
-                  disabled={!!isExporting}
+                  onClick={() => handleExportZip()} 
+                  disabled={isExporting}
                   className={`w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 rounded-xl text-[10px] uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  {isExporting === 'standard' ? t('exporting') : t('export')}
-                </button>
-                <button 
-                  onClick={() => handleExportZip('tx16s')} 
-                  disabled={!!isExporting}
-                  className={`w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl text-[10px] uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  {isExporting === 'tx16s' ? t('exporting') : t('exportTx')}
+                  {isExporting ? t('exporting') : t('export')}
                 </button>
               </div>
 
