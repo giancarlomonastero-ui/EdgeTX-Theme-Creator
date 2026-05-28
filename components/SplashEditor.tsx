@@ -14,7 +14,7 @@ interface SplashEditorProps {
   item: GalleryItem | null;
   lang: 'it' | 'en';
   onClose: () => void;
-  onExport: (item: GalleryItem, resolution: '800x480' | '480x272') => void;
+  onExport: (item: GalleryItem, resolution: '800x480' | '480x272' | '480x320') => void;
 }
 
 const FONTS_LIST = [
@@ -281,7 +281,7 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
     isItalic
   ]);
 
-  const handleExport = (resolution: '800x480' | '480x272') => {
+  const handleExport = (resolution: '800x480' | '480x272' | '480x320') => {
     const canvas = canvasRef.current;
     if (item && onExport && canvas) {
       try {
@@ -545,21 +545,31 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
           </div>
 
           {/* FIANCO FISSO BOTTOM CON AZIONI DI ESPORTAZIONE */}
-          <div className="border-t border-slate-800 p-4 bg-slate-950/80 flex flex-col gap-2 shrink-0">
-            <div className="grid grid-cols-2 gap-2">
+          <div className="border-t border-slate-800 p-4 bg-slate-950/80 flex flex-col gap-2.5 shrink-0">
+            <div className="grid grid-cols-3 gap-1.5">
               <button
+                type="button"
+                onClick={() => handleExport('480x272')}
+                disabled={!imageLoaded}
+                className="bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md cursor-pointer text-center"
+              >
+                480x272
+              </button>
+              <button
+                type="button"
+                onClick={() => handleExport('480x320')}
+                disabled={!imageLoaded}
+                className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md cursor-pointer text-center"
+              >
+                480x320
+              </button>
+              <button
+                type="button"
                 onClick={() => handleExport('800x480')}
                 disabled={!imageLoaded}
                 className="bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md hover:shadow-amber-500/10 cursor-pointer text-center"
               >
-                {localized.export800}
-              </button>
-              <button
-                onClick={() => handleExport('480x272')}
-                disabled={!imageLoaded}
-                className="bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md hover:shadow-amber-500/10 cursor-pointer text-center"
-              >
-                {localized.export272}
+                800x480
               </button>
             </div>
             <button

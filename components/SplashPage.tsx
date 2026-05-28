@@ -137,7 +137,7 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
     };
   }, [activeLang]);
 
-  const handleDownloadSplash = async (item: GalleryItem, resolution: '800x480' | '480x272') => {
+  const handleDownloadSplash = async (item: GalleryItem, resolution: '800x480' | '480x272' | '480x320') => {
     const actionId = `${item.id}-${resolution}`;
     try {
       setDownloadingId(actionId);
@@ -152,7 +152,7 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
       const blob = await res.blob();
       const objectUrl = URL.createObjectURL(blob);
 
-      if (resolution === '480x272') {
+      if (resolution === '480x272' || resolution === '480x320') {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.referrerPolicy = 'no-referrer';
@@ -163,11 +163,13 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
         });
 
         const canvas = document.createElement('canvas');
-        canvas.width = 480;
-        canvas.height = 272;
+        const targetW = 480;
+        const targetH = resolution === '480x320' ? 320 : 272;
+        canvas.width = targetW;
+        canvas.height = targetH;
         const ctx = canvas.getContext('2d');
         if (!ctx) throw new Error('Canvas 2D context not available');
-        ctx.drawImage(img, 0, 0, 480, 272);
+        ctx.drawImage(img, 0, 0, targetW, targetH);
 
         canvas.toBlob((resizedBlob) => {
           if (resizedBlob) {
@@ -210,7 +212,7 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
             <span className="inline-block w-2.5 h-6 bg-amber-500 rounded-full animate-pulse"></span>
             {t.splashTitle}
           </h2>
-          <p className="text-white text-xs bg-amber-950/40 border border-amber-800/30 rounded-lg p-4 mt-4 font-normal leading-relaxed">
+          <p className="text-white text-xs bg-blue-950/40 border border-blue-800/30 rounded-lg p-4 mt-4 font-normal leading-relaxed">
             {t.splashSubtitle}
           </p>
         </div>
@@ -260,20 +262,30 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
                   >
                     ✏️ {activeLang === 'it' ? 'PERSONALIZZA / EDITA' : 'CUSTOMIZE / EDIT'}
                   </button>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-3 gap-1.5">
                     <button
-                      onClick={() => handleDownloadSplash(item, '800x480')}
-                      disabled={downloadingId !== null}
-                      className="bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 px-1 rounded-lg transition-colors text-center cursor-pointer"
-                    >
-                      {downloadingId === `${item.id}-800x480` ? (activeLang === 'it' ? 'Download...' : 'Downloading...') : t.splashResOriginal}
-                    </button>
-                    <button
+                      type="button"
                       onClick={() => handleDownloadSplash(item, '480x272')}
                       disabled={downloadingId !== null}
-                      className="bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-slate-200 text-[10px] font-black uppercase tracking-widest py-2 px-1 rounded-lg transition-colors text-center cursor-pointer"
+                      className="bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md cursor-pointer text-center"
                     >
-                      {downloadingId === `${item.id}-480x272` ? (activeLang === 'it' ? 'Resize...' : 'Resizing...') : t.splashResResized}
+                      {downloadingId === `${item.id}-480x272` ? '...' : '480x272'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadSplash(item, '480x320')}
+                      disabled={downloadingId !== null}
+                      className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md cursor-pointer text-center"
+                    >
+                      {downloadingId === `${item.id}-480x320` ? '...' : '480x320'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadSplash(item, '800x480')}
+                      disabled={downloadingId !== null}
+                      className="bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md cursor-pointer text-center"
+                    >
+                      {downloadingId === `${item.id}-800x480` ? '...' : '800x480'}
                     </button>
                   </div>
                 </div>
