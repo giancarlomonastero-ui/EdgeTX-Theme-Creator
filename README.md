@@ -47,6 +47,7 @@ Features include:
 ### 📥 Smart Splash Export
 - Export ready-to-use:
   - 800x480
+  - 480x320
   - 480x272
 - Automatic filename generation:
   - splash.png
