@@ -147,7 +147,7 @@ const App: React.FC = () => {
           theme: { ...INITIAL_THEME, ...parsed.theme },
           meta: parsed.meta || { name: '', author: '', info: '' },
           droneImg: parsed.droneImg || "/assets/drone.png",
-          backgroundImg: parsed.backgroundImg || null,
+          backgroundImg: parsed.backgroundImg !== undefined ? parsed.backgroundImg : "/background.png",
           modelLabel: parsed.modelLabel || 'MODEL',
           lang: (parsed.lang === 'it' || parsed.lang === 'en' ? parsed.lang : 'en') as 'it' | 'en'
         };
@@ -159,7 +159,7 @@ const App: React.FC = () => {
       theme: { ...INITIAL_THEME },
       meta: { name: '', author: '', info: '' },
       droneImg: "/assets/drone.png",
-      backgroundImg: null,
+      backgroundImg: "/background.png",
       modelLabel: 'MODEL',
       lang: 'en' as 'it' | 'en'
     };
@@ -315,41 +315,51 @@ ${colorsLines}`;
     const zip = new JSZip();
     zip.file("theme.yml", yamlCode);
 
-    const bgToProcess = backgroundImg || "/background.png";
+    let targetW = 480;
+    let targetH = 272;
+    let fileName = 'background_480x272.png';
+
+    if (selectedResolution === '800x480') {
+      targetW = 800;
+      targetH = 480;
+      fileName = 'background.png';
+    } else if (selectedResolution === '480x320') {
+      targetW = 480;
+      targetH = 320;
+      fileName = 'background_480x320.png';
+    }
+
     setExportStatus(translations[lang].statusBg as string);
     try {
-      const bgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
-        const img = new Image();
-        if (!bgToProcess.startsWith('data:')) {
-          img.crossOrigin = "anonymous";
-        }
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = bgToProcess;
-      });
-
-      let targetW = 480;
-      let targetH = 272;
-      let fileName = 'background_480x272.png';
-
-      if (selectedResolution === '800x480') {
-        targetW = 800;
-        targetH = 480;
-        fileName = 'background.png';
-      } else if (selectedResolution === '480x320') {
-        targetW = 480;
-        targetH = 320;
-        fileName = 'background_480x320.png';
-      }
-
       const bgCanvas = document.createElement('canvas');
       bgCanvas.width = targetW;
       bgCanvas.height = targetH;
       const bgCtx = bgCanvas.getContext('2d');
       if (bgCtx) {
-        bgCtx.imageSmoothingEnabled = true;
-        bgCtx.imageSmoothingQuality = 'high';
-        bgCtx.drawImage(bgImg, 0, 0, targetW, targetH);
+        if (backgroundImg) {
+          try {
+            const bgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
+              const img = new Image();
+              if (!backgroundImg.startsWith('data:')) {
+                img.crossOrigin = "anonymous";
+              }
+              img.onload = () => resolve(img);
+              img.onerror = reject;
+              img.src = backgroundImg;
+            });
+            bgCtx.imageSmoothingEnabled = true;
+            bgCtx.imageSmoothingQuality = 'high';
+            bgCtx.drawImage(bgImg, 0, 0, targetW, targetH);
+          } catch (e) {
+            console.error("Error processing background image", e);
+            bgCtx.fillStyle = theme.secondary3;
+            bgCtx.fillRect(0, 0, targetW, targetH);
+          }
+        } else {
+          // No active background image -> fill with dynamic secondary3 color!
+          bgCtx.fillStyle = theme.secondary3;
+          bgCtx.fillRect(0, 0, targetW, targetH);
+        }
         const bgData = bgCanvas.toDataURL("image/png").split(',')[1];
         zip.file(fileName, bgData, {base64: true});
       }
