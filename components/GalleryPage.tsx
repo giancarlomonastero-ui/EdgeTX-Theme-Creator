@@ -21,7 +21,7 @@ const GALLERY_TRANSLATIONS = {
   it: {
     title: 'Gallery Sfondi HD',
     subtitle: 'Archivio sfondi 800x480.',
-    ownerHint: 'Clicca sull\'immagine che preferisci per inserirla automaticamente come sfondo del template. (Immagini di mia creazione, gratuite per uso personale/non commerciale. Vietata vendita o uso commerciale senza autorizzazione).',
+    ownerHint: 'Clicca sull\'immagine che preferisci per inserirla automaticamente come sfondo del template. (Immagini gratuite per uso personale/non commerciale. Vietata vendita o uso commerciale senza autorizzazione).',
     configureHint: 'Configura apiKey e folderId in gallery.config.ts per caricare le immagini.',
     loading: 'Caricamento galleria...',
     empty: 'Nessuna immagine trovata nella cartella Gallery.',
@@ -35,7 +35,7 @@ const GALLERY_TRANSLATIONS = {
   en: {
     title: 'HD Background Gallery',
     subtitle: '800x480 background archive.',
-    ownerHint: 'Click the image you prefer to automatically apply it as your template background. (My original images, free for personal/non-commercial use. No selling or commercial use without permission).',
+    ownerHint: 'Click the image you prefer to automatically apply it as your template background. (Free images for personal/non-commercial use. No selling or commercial use without permission).',
     configureHint: 'Set apiKey and folderId in gallery.config.ts to load images.',
     loading: 'Loading gallery...',
     empty: 'No images found in the Gallery folder.',
