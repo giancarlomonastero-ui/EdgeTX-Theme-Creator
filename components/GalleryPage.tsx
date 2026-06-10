@@ -169,7 +169,7 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ lang, onApplyBackground }) =>
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-white">{t.title}</h2>
           <p className="text-slate-400 text-sm mt-1">{t.subtitle}</p>
-          <p className="text-slate-500 text-xs mt-2">{t.ownerHint}</p>
+          <p className="text-white text-xs mt-2">{t.ownerHint}</p>
         </div>
 
         {!isConfigured && (
