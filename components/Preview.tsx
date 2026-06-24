@@ -399,7 +399,7 @@ const Preview: React.FC<PreviewProps> = ({
         {Array.from({ length: 31 }).map((_, i) => (
           <div 
             key={i} 
-            className={`h-[1px] ${i % 5 === 0 ? 'w-5' : 'w-2.5'}`}
+            className={`h-[2px] ${i % 5 === 0 ? 'w-5' : 'w-2.5'}`}
             style={{ backgroundColor: theme.secondary1, opacity: 0.6 }}
           ></div>
         ))}
@@ -443,7 +443,7 @@ const Preview: React.FC<PreviewProps> = ({
           {Array.from({ length: 31 }).map((_, i) => (
             <div 
               key={i} 
-              className={`w-[1px] ${i % 5 === 0 ? 'h-6' : 'h-3'}`}
+              className={`w-[2px] ${i % 5 === 0 ? 'h-6' : 'h-3'}`}
               style={{ backgroundColor: theme.secondary1, opacity: 0.6 }}
             ></div>
           ))}
@@ -499,7 +499,7 @@ const Preview: React.FC<PreviewProps> = ({
       <div className="flex-grow flex items-center justify-center px-16 -mt-8">
         <div className="w-full max-w-[650px] grid grid-cols-[45%_55%] gap-8">
           <div className="flex flex-col justify-center translate-y-[20px]">
-            <div className="border-[1.5px] overflow-hidden shadow-lg rounded-sm" style={{ borderColor: theme.primary1, ...getHighlightStyle('primary1') }} onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}>
+            <div className="border-[1.5px] overflow-hidden shadow-lg rounded-sm" style={{ borderColor: theme.primary1, backgroundColor: '#FFFFFF', ...getHighlightStyle('primary1') }} onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((ch) => (
                 <div key={ch} className="grid grid-cols-[50px_1fr_50px] h-[22px] items-center border-b last:border-b-0" style={{ borderColor: theme.primary1, backgroundColor: 'transparent' }}>
                   <div className="px-2 font-black text-[12px]" style={{ color: theme.primary1 }} onClick={(e) => { e.stopPropagation(); onVariableClick('primary1'); }}>CH{ch}</div>
