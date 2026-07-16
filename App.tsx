@@ -14,7 +14,7 @@ const TARGET_RESOLUTIONS = [
   {
     id: '480x272' as const,
     label: '480×272',
-    radios: 'RadioMaster TX16S MK1/MK2, Eachine TX16S, Jumper T16/T18/T15, FrSky Horus X10/X10S, FlySky NV14/EL18/PL18/PL18EV/PL18U, HelloRadioSky V16, FatFish F16'
+    radios: 'RadioMaster TX16S MK1/MK2, Eachine TX16S, Jumper T16/T18/T15, FrSky Horus X10/X10S, FlySky PL18/PL18EV/PL18U, HelloRadioSky V16, FatFish F16'
   },
   {
     id: '480x320' as const,
