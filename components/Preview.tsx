@@ -1054,7 +1054,7 @@ const Preview: React.FC<PreviewProps> = ({
 
             <div className="relative z-10 flex flex-col h-full">
               {renderTopBar()}
-              <div className="h-[3px] w-full shrink-0" style={{ backgroundColor: backgroundImage ? 'transparent' : theme.secondary3 }} onClick={(e) => { e.stopPropagation(); onVariableClick('secondary3'); }}></div>
+              <div className="h-[3px] w-full shrink-0" style={{ backgroundColor: activeScreen === 'screenshot1' ? 'transparent' : theme.secondary3 }} onClick={(e) => { e.stopPropagation(); onVariableClick('secondary3'); }}></div>
               {activeScreen === 'screenshot1' && renderScreenshot1()}
               {activeScreen === 'screenshot2' && renderScreenshot2()}
               {activeScreen === 'screenshot3' && renderScreenshot3()}
