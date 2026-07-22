@@ -19,7 +19,7 @@ const TARGET_RESOLUTIONS = [
   {
     id: '480x320' as const,
     label: '480×320',
-    radios: 'Radiomaster TX15, FlySky ST16'
+    radios: 'Radiomaster TX15, FlySky ST16, Jumper T15 Pro'
   },
   {
     id: '800x480' as const,
