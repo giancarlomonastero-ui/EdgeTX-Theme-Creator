@@ -1,6 +1,6 @@
 # EdgeTX Theme Designer
 
-![EdgeTX Theme Designer Banner](https://drive.google.com/uc?export=view&id=1cSuoLeKdp-PwyAqXkLyYTayxmd58KQ8H)
+![EdgeTX Theme Designer Banner](https://drive.google.com/uc?export=view&id=1S7DAgGINi2fd-OpbgGNIbnFCCsQUIEtq)
 
 A professional and intuitive web application designed to simplify the creation of custom color themes and visual assets for EdgeTX compatible radios (optimized for 800x480 displays such as the TX16S MK3).
 

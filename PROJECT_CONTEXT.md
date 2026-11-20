@@ -1,7 +1,7 @@
 # PROJECT CONTEXT
 
 ## Nome progetto
-EdgeTX Theme Designer (v1.8.0)
+EdgeTX Theme Designer (v1.9.0)
 
 ---
 
