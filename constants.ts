@@ -1,4 +1,4 @@
-import { VariableMeta, EdgeTXTheme } from './types.ts';
+import { VariableMeta, EdgeTXTheme, ResolutionConfig } from './types.ts';
 
 export const VARIABLE_METADATA: VariableMeta[] = [
   {
@@ -102,3 +102,38 @@ export const PRESETS: Record<string, EdgeTXTheme> = {
     qm_fg: '#FFFFFF'
   }
 };
+
+export const TARGET_RESOLUTIONS: ResolutionConfig[] = [
+  {
+    id: '320x240',
+    label: '320×240',
+    width: 320,
+    height: 240,
+    backgroundFileName: 'background_320x240.png',
+    radios: 'Radiomaster GX10 Max'
+  },
+  {
+    id: '480x272',
+    label: '480×272',
+    width: 480,
+    height: 272,
+    backgroundFileName: 'background_480x272.png',
+    radios: 'RadioMaster TX16S MK1/MK2, Eachine TX16S, Jumper T16/T18/T15, FrSky Horus X10/X10S, FlySky PL18/PL18EV/PL18U, HelloRadioSky V16, FatFish F16'
+  },
+  {
+    id: '480x320',
+    label: '480×320',
+    width: 480,
+    height: 320,
+    backgroundFileName: 'background_480x320.png',
+    radios: 'Radiomaster TX15/GX15, FlySky ST16, Jumper T15-pro/T22'
+  },
+  {
+    id: '800x480',
+    label: '800×480',
+    width: 800,
+    height: 480,
+    backgroundFileName: 'background.png',
+    radios: 'RadioMaster TX16S MK3'
+  }
+];

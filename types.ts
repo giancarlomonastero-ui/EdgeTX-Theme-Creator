@@ -51,3 +51,14 @@ export interface HistoryEntry {
   timestamp: number;
   label: string;
 }
+
+export type TargetResolution = '320x240' | '480x272' | '480x320' | '800x480';
+
+export interface ResolutionConfig {
+  id: TargetResolution;
+  label: string;
+  width: number;
+  height: number;
+  backgroundFileName: string;
+  radios: string;
+}

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { EdgeTXTheme, ThemeVariable, ThemeMetadata } from './types.ts';
-import { INITIAL_THEME, VARIABLE_METADATA } from './constants.ts';
+import { EdgeTXTheme, ThemeVariable, ThemeMetadata, TargetResolution } from './types.ts';
+import { INITIAL_THEME, VARIABLE_METADATA, TARGET_RESOLUTIONS } from './constants.ts';
 import Preview from './components/Preview.tsx';
 import Header from './components/Header.tsx';
 import GalleryPage from './components/GalleryPage.tsx';
@@ -9,24 +9,6 @@ import SplashPage from './components/SplashPage.tsx';
 type ScreenID = 'screenshot1' | 'screenshot2' | 'screenshot3';
 
 const STORAGE_KEY = 'edgetx_designer_session';
-
-const TARGET_RESOLUTIONS = [
-  {
-    id: '480x272' as const,
-    label: '480×272',
-    radios: 'RadioMaster TX16S MK1/MK2, Eachine TX16S, Jumper T16/T18/T15, FrSky Horus X10/X10S, FlySky PL18/PL18EV/PL18U, HelloRadioSky V16, FatFish F16'
-  },
-  {
-    id: '480x320' as const,
-    label: '480×320',
-    radios: 'Radiomaster TX15/GX15, FlySky ST16, Jumper T15-pro/T22'
-  },
-  {
-    id: '800x480' as const,
-    label: '800×480',
-    radios: 'RadioMaster TX16S MK3'
-  }
-];
 
 const App: React.FC = () => {
   const translations = {
@@ -179,7 +161,7 @@ const App: React.FC = () => {
   const [selectedVar, setSelectedVar] = useState<ThemeVariable | null>(null);
   const [hoveredVar, setHoveredVar] = useState<ThemeVariable | null>(null);
   const [isExporting, setIsExporting] = useState<boolean>(false);
-  const [selectedResolution, setSelectedResolution] = useState<'480x272' | '480x320' | '800x480'>('480x272');
+  const [selectedResolution, setSelectedResolution] = useState<TargetResolution>('480x272');
   const [exportProgress, setExportProgress] = useState(0);
   const [exportStatus, setExportStatus] = useState("");
   const [currentPage, setCurrentPage] = useState<'designer' | 'gallery' | 'splash'>('designer');
@@ -315,19 +297,10 @@ ${colorsLines}`;
     const zip = new JSZip();
     zip.file("theme.yml", yamlCode);
 
-    let targetW = 480;
-    let targetH = 272;
-    let fileName = 'background_480x272.png';
-
-    if (selectedResolution === '800x480') {
-      targetW = 800;
-      targetH = 480;
-      fileName = 'background.png';
-    } else if (selectedResolution === '480x320') {
-      targetW = 480;
-      targetH = 320;
-      fileName = 'background_480x320.png';
-    }
+    const resolutionConfig = TARGET_RESOLUTIONS.find(r => r.id === selectedResolution) ?? TARGET_RESOLUTIONS[1];
+    const targetW = resolutionConfig.width;
+    const targetH = resolutionConfig.height;
+    const fileName = resolutionConfig.backgroundFileName;
 
     setExportStatus(translations[lang].statusBg as string);
     try {

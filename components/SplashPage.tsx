@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GALLERY_CONFIG } from '../gallery.config.ts';
+import { TargetResolution } from '../types.ts';
+import { TARGET_RESOLUTIONS } from '../constants.ts';
 import { SplashEditor } from './SplashEditor.tsx';
 
 type Lang = 'it' | 'en';
@@ -137,7 +139,7 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
     };
   }, [activeLang]);
 
-  const handleDownloadSplash = async (item: GalleryItem, resolution: '800x480' | '480x272' | '480x320') => {
+  const handleDownloadSplash = async (item: GalleryItem, resolution: TargetResolution) => {
     const actionId = `${item.id}-${resolution}`;
     try {
       setDownloadingId(actionId);
@@ -152,7 +154,7 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
       const blob = await res.blob();
       const objectUrl = URL.createObjectURL(blob);
 
-      if (resolution === '480x272' || resolution === '480x320') {
+      if (resolution !== '800x480') {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.referrerPolicy = 'no-referrer';
@@ -162,9 +164,10 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
           img.onerror = () => reject(new Error('Image failed to load for resizing'));
         });
 
+        const resolutionConfig = TARGET_RESOLUTIONS.find(r => r.id === resolution);
+        const targetW = resolutionConfig ? resolutionConfig.width : 480;
+        const targetH = resolutionConfig ? resolutionConfig.height : 272;
         const canvas = document.createElement('canvas');
-        const targetW = 480;
-        const targetH = resolution === '480x320' ? 320 : 272;
         canvas.width = targetW;
         canvas.height = targetH;
         const ctx = canvas.getContext('2d');
@@ -262,7 +265,15 @@ const SplashPage: React.FC<SplashPageProps> = ({ lang }) => {
                   >
                     ✏️ {activeLang === 'it' ? 'PERSONALIZZA / EDITA' : 'CUSTOMIZE / EDIT'}
                   </button>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadSplash(item, '320x240')}
+                      disabled={downloadingId !== null}
+                      className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md cursor-pointer text-center"
+                    >
+                      {downloadingId === `${item.id}-320x240` ? '...' : '320x240'}
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleDownloadSplash(item, '480x272')}

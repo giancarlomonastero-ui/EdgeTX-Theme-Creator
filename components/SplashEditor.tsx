@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { TargetResolution } from '../types.ts';
 
 interface GalleryItem {
   id: string;
@@ -14,7 +15,7 @@ interface SplashEditorProps {
   item: GalleryItem | null;
   lang: 'it' | 'en';
   onClose: () => void;
-  onExport: (item: GalleryItem, resolution: '800x480' | '480x272' | '480x320') => void;
+  onExport: (item: GalleryItem, resolution: TargetResolution) => void;
 }
 
 const FONTS_LIST = [
@@ -281,7 +282,7 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
     isItalic
   ]);
 
-  const handleExport = (resolution: '800x480' | '480x272' | '480x320') => {
+  const handleExport = (resolution: TargetResolution) => {
     const canvas = canvasRef.current;
     if (item && onExport && canvas) {
       try {
@@ -546,7 +547,15 @@ export const SplashEditor: React.FC<SplashEditorProps> = ({ isOpen, item, lang, 
 
           {/* FIANCO FISSO BOTTOM CON AZIONI DI ESPORTAZIONE */}
           <div className="border-t border-slate-800 p-4 bg-slate-950/80 flex flex-col gap-2.5 shrink-0">
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleExport('320x240')}
+                disabled={!imageLoaded}
+                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-widest py-2 rounded-lg transition-all shadow-md cursor-pointer text-center"
+              >
+                320x240
+              </button>
               <button
                 type="button"
                 onClick={() => handleExport('480x272')}
